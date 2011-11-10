@@ -34,9 +34,17 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 	dispatch_once(&onceToken, ^{
 		NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
 		NSManagedObjectModel *model = [self managedObjectModel];
+		
+		// Default to merged model if there isn't one
 		if (!model) {
-			NSURL *modelURL = [[NSBundle mainBundle] URLForResource:applicationName withExtension:@"momd"];
-			model = [[[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL] autorelease];
+			model = [NSManagedObjectModel mergedModelFromBundles:nil];
+			
+			// Set the model if that's the model we end up using
+			if (model) {
+				[self setManagedObjectModel:model];
+			} else {
+				[[NSException exceptionWithName:@"SSManagedObjectMissingModel" reason:@"You need to provide a managed model." userInfo:nil] raise];
+			}
 		}
 		
 		persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
