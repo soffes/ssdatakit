@@ -1,6 +1,6 @@
 //
 //  SSManagedObject.m
-//  SSManagedObject
+//  SSDataKit
 //
 //  Created by Sam Soffes on 10/23/11.
 //  Copyright (c) 2011 Sam Soffes. All rights reserved.
