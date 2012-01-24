@@ -12,6 +12,6 @@
 
 @interface SSManagedObjectContextObserver ()
 
-- (void)_processContextAfterSave:(SSManagedObjectContext *)context insertedObject:(NSSet *)insertedObjects updatedObjects:(NSSet *)updatedObjects;
+- (void)_processContextAfterSave:(NSManagedObjectContext *)context insertedObject:(NSSet *)insertedObjects updatedObjects:(NSSet *)updatedObjects;
 
 @end

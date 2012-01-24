@@ -8,18 +8,11 @@
 
 #import "SSManagedObject.h"
 
-@class SSManagedObjectContext;
-
 typedef void (^SSManagedObjectContextObserverObservationBlock)(NSSet *insertedObjectIDs, NSSet *updatedObjectIDs);
 
 @interface SSManagedObjectContextObserver : NSObject
 
 @property (nonatomic, retain) NSEntityDescription *entity;
-
 @property (nonatomic, copy) SSManagedObjectContextObserverObservationBlock observationBlock;
-
-@property (nonatomic, retain, readonly) SSManagedObjectContext *managedObjectContext;
-
-- (id)initWithContext:(SSManagedObjectContext *)context;
 
 @end

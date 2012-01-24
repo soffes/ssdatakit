@@ -7,8 +7,6 @@
 //
 
 #import "SSManagedObjectContextObserver.h"
-#import "SSManagedObjectContext.h"
-#import "SSManagedObjectContextPrivate.h"
 
 @interface SSManagedObjectContextObserver ()
 - (BOOL)_objectMatchesCriteria:(NSManagedObject *)object;
@@ -18,38 +16,19 @@
 
 @synthesize entity = _entity;
 @synthesize observationBlock = _observationBlock;
-@synthesize managedObjectContext = _managedObjectContext;
 
 #pragma mark - NSObject
 
-- (id)init {
-	return (self = [self initWithContext:[SSManagedObject mainContext]]);
-}
-
-
 - (void)dealloc {
-	[_managedObjectContext _removeObserver:self];
-	_managedObjectContext = nil;
 	[_observationBlock release];
 	[_entity release];
 	[super dealloc];
 }
 
 
-#pragma mark - Initializing
-
-- (id)initWithContext:(SSManagedObjectContext *)context {
-	if ((self = [super init])) {
-		_managedObjectContext = [context retain];
-		[_managedObjectContext _addObserver:self];
-	}
-	return self;
-}
-
-
 #pragma mark - Private
 
-- (void)_processContextAfterSave:(SSManagedObjectContext *)context insertedObject:(NSSet *)insertedObjects updatedObjects:(NSSet *)updatedObjects {
+- (void)_processContextAfterSave:(NSManagedObjectContext *)context insertedObject:(NSSet *)insertedObjects updatedObjects:(NSSet *)updatedObjects {
 	if (!_observationBlock) {
 		return;
 	}

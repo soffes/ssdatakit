@@ -7,7 +7,6 @@
 //
 
 #import "SSManagedObjectContext.h"
-#import "SSManagedObjectContextPrivate.h"
 #import "SSManagedObjectContextObserver.h"
 #import "SSManagedObjectContextObserverPrivate.h"
 
@@ -26,7 +25,7 @@
 
 
 - (void)dealloc {
-	[_observers removeAllObjects];
+	[self removeAllObjectObservers];
 	[_observers release];
 	[super dealloc];
 }
@@ -53,13 +52,18 @@
 
 #pragma mark - Observers
 
-- (void)_addObserver:(SSManagedObjectContextObserver *)observer {
+- (void)addObjectObserver:(SSManagedObjectContextObserver *)observer {
 	[_observers addObject:observer];
 }
 
 
-- (void)_removeObserver:(SSManagedObjectContextObserver *)observer {
+- (void)removeObjectObserver:(SSManagedObjectContextObserver *)observer {
 	[_observers removeObject:observer];
+}
+
+
+- (void)removeAllObjectObservers {
+	[_observers removeAllObjects];
 }
 
 

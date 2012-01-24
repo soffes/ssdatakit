@@ -12,6 +12,11 @@
 
 @interface SSManagedObjectContext : NSManagedObjectContext
 
+// Observing
+- (void)addObjectObserver:(SSManagedObjectContextObserver *)observer;
+- (void)removeObjectObserver:(SSManagedObjectContextObserver *)observer;
+- (void)removeAllObjectObservers;
+
 // Unmagic
 - (BOOL)saveWithoutMagic:(NSError **)error;
 
