@@ -7,6 +7,7 @@
 //
 
 #import "SSManagedObject.h"
+#import "SSManagedObjectContext.h"
 
 static NSManagedObjectModel *kManagedObjectModel = nil;
 static NSURL *kPersistentStoreURL = nil;
@@ -16,11 +17,11 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 #pragma mark - Managing Main Context
 
-+ (NSManagedObjectContext *)mainContext {
-	static NSManagedObjectContext *mainContext = nil;
++ (SSManagedObjectContext *)mainContext {
+	static SSManagedObjectContext *mainContext = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		mainContext = [[NSManagedObjectContext alloc] init];
+		mainContext = [[SSManagedObjectContext alloc] init];
 		mainContext.persistentStoreCoordinator = [self persistentStoreCoordinator];
 	});
 	
