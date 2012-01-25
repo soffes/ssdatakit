@@ -10,7 +10,7 @@
 
 @implementation NSManagedObjectContext (SSDataKitAdditions)
 
-- (NSManagedObjectContext *)newWithCurrentPersistentStoreCoordinator {
+- (NSManagedObjectContext *)newManagedObjectContextWithCurrentPersistentStoreCoordinator {
 	NSManagedObjectContext *context = [[[self class] alloc] init];
 	context.persistentStoreCoordinator = self.persistentStoreCoordinator;
 	return context;
