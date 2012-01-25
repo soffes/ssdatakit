@@ -19,6 +19,8 @@
 
 - (id)init {
 	if ((self = [super init])) {
+		[self setup];
+		
 		_observer = [[SSManagedObjectContextObserver alloc] init];
 		_observer.entity = self.entity;
 		_observer.observationBlock = ^(NSSet *insertedObjectIDs, NSSet *updatedObjectIDs) {
