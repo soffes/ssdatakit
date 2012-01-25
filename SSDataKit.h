@@ -12,3 +12,4 @@
 #import "SSManagedObject.h"
 #import "SSManagedObjectContext.h"
 #import "SSManagedObjectContextObserver.h"
+#import "SSManagedObjectController.h"

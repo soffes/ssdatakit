@@ -95,12 +95,12 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 }
 
 
-+ (NSEntityDescription *)entityDescription {
-	return [self entityDescriptionWithContext:nil];
++ (NSEntityDescription *)entity {
+	return [self entityWithContext:nil];
 }
 
 
-+ (NSEntityDescription *)entityDescriptionWithContext:(NSManagedObjectContext *)context {
++ (NSEntityDescription *)entityWithContext:(NSManagedObjectContext *)context {
 	if (!context) {
 		context = [self mainContext];
 	}
@@ -123,21 +123,21 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 		context = [[self class] mainContext];
 	}
 	
-	NSEntityDescription *entityDescription = [[self class] entityDescriptionWithContext:context];
+	NSEntityDescription *entity = [[self class] entityWithContext:context];
 	
-	return (self = [self initWithEntity:entityDescription insertIntoManagedObjectContext:context]);
+	return (self = [self initWithEntity:entity insertIntoManagedObjectContext:context]);
 }
 
 
 #pragma mark - Reflection
 
 - (NSArray *)attributeKeys {
-	return [[[[self class] entityDescriptionWithContext:[self managedObjectContext]] attributesByName] allKeys];
+	return [[[[self class] entityWithContext:[self managedObjectContext]] attributesByName] allKeys];
 }
 
 
 - (NSArray *)persistedAttributeKeys {
-	NSDictionary *attributes = [[[self class] entityDescriptionWithContext:[self managedObjectContext]] attributesByName];
+	NSDictionary *attributes = [[[self class] entityWithContext:[self managedObjectContext]] attributesByName];
 	NSMutableArray *keys = [[NSMutableArray alloc] init];
 	for (NSString *key in attributes) {
 		if ([[attributes objectForKey:key] isTransient] == NO) {
@@ -150,7 +150,7 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 
 - (NSArray *)transientAttributeKeys {
-	NSDictionary *attributes = [[[self class] entityDescriptionWithContext:[self managedObjectContext]] attributesByName];
+	NSDictionary *attributes = [[[self class] entityWithContext:[self managedObjectContext]] attributesByName];
 	NSMutableArray *keys = [[NSMutableArray alloc] init];
 	for (NSString *key in attributes) {
 		if ([[attributes objectForKey:key] isTransient] == YES) {
@@ -163,7 +163,7 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 
 - (NSArray *)relationshipKeys {
-	return [[[[self class] entityDescriptionWithContext:[self managedObjectContext]] relationshipsByName] allKeys];
+	return [[[[self class] entityWithContext:[self managedObjectContext]] relationshipsByName] allKeys];
 }
 
 
@@ -176,7 +176,7 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 		return nil;
 	}
 	
-	NSEntityDescription *rootEntity = [[self class] entityDescriptionWithContext:[self managedObjectContext]];
+	NSEntityDescription *rootEntity = [[self class] entityWithContext:[self managedObjectContext]];
 	NSRelationshipDescription *relationship = nil;
 	
 	// Loop through keys and find the relationship
