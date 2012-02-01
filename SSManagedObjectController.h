@@ -10,6 +10,8 @@
 
 @interface SSManagedObjectController : NSObject
 
+@property (nonatomic, readonly) dispatch_queue_t processingQueue;
+
 - (SSManagedObjectContext *)managedObjectContext;
 - (NSEntityDescription *)entity;
 - (void)setup;
