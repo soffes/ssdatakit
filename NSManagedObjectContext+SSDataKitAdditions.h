@@ -9,6 +9,6 @@
 @interface NSManagedObjectContext (SSDataKitAdditions)
 
 // Creates a new context of the same class and sets its persistent store coordinator to the current one
-- (NSManagedObjectContext *)newManagedObjectContextWithCurrentPersistentStoreCoordinator CF_RETURNS_RETAINED;
+- (NSManagedObjectContext *)newManagedObjectContextWithCurrentPersistentStoreCoordinator;
 
 @end
