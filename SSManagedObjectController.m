@@ -21,22 +21,23 @@
 
 - (id)init {
 	if ((self = [super init])) {
-		_processingQueue = dispatch_queue_create("es.samsoff.ssdatakit.object-controller-processing-queue", DISPATCH_QUEUE_SERIAL);
+		_processingQueue = dispatch_queue_create("com.samsoffes.ssdatakit.object-controller-processing-queue", DISPATCH_QUEUE_SERIAL);
 		
 		[self setup];
 		
 		_observer = [[SSManagedObjectContextObserver alloc] init];
 		_observer.entity = self.entity;
+		
+		SSManagedObjectController *controller = self;
 		_observer.observationBlock = ^(NSSet *insertedObjectIDs, NSSet *updatedObjectIDs) {
 			dispatch_async(self.processingQueue, ^{
 				NSSet *updateSet = [insertedObjectIDs setByAddingObjectsFromSet:updatedObjectIDs];
 				for (NSManagedObjectID *objectID in updateSet) {
-					[self processObjectID:objectID];
+					[controller processObjectID:objectID];
 				}
 			});
 		};
 		[self.managedObjectContext addObjectObserver:_observer];
-		[_observer release];
 	}
 	return self;
 }
@@ -44,9 +45,7 @@
 
 - (void)dealloc {
 	[self.managedObjectContext removeObjectObserver:_observer];
-	[_observer release];
 	dispatch_release(_processingQueue);
-	[super dealloc];	
 }
 
 

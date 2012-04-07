@@ -17,15 +17,6 @@
 @synthesize entity = _entity;
 @synthesize observationBlock = _observationBlock;
 
-#pragma mark - NSObject
-
-- (void)dealloc {
-	[_observationBlock release];
-	[_entity release];
-	[super dealloc];
-}
-
-
 #pragma mark - Private
 
 - (void)_processContextAfterSave:(NSManagedObjectContext *)context insertedObject:(NSSet *)insertedObjects updatedObjects:(NSSet *)updatedObjects {
@@ -53,9 +44,6 @@
 	if (inserted.count > 0 || updated.count > 0) {
 		_observationBlock(inserted, updated);
 	}
-	
-	[inserted release];
-	[updated release];
 }
 
 

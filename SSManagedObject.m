@@ -71,8 +71,6 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 
 + (void)setManagedObjectModel:(NSManagedObjectModel *)model {
-	[model retain];
-	[kManagedObjectModel release];
 	kManagedObjectModel = model;
 }
 
@@ -83,8 +81,6 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 
 + (void)setPersistentStoreURL:(NSURL *)url {
-	[url retain];
-	[kPersistentStoreURL release];
 	kPersistentStoreURL = url;
 }
 
@@ -146,7 +142,7 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 		}
 	}
 	
-	return [keys autorelease];
+	return keys;
 }
 
 
@@ -159,7 +155,7 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 		}
 	}
 	
-	return [keys autorelease];
+	return keys;
 }
 
 
@@ -205,7 +201,7 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 - (id)initWithCoder:(NSCoder *)decoder {
 	NSManagedObjectContext *context = [[self class] mainContext];
 	NSPersistentStoreCoordinator *psc = [[self class] persistentStoreCoordinator];
-	self = (SSManagedObject *)[[context objectWithID:[psc managedObjectIDForURIRepresentation:(NSURL *)[decoder decodeObjectForKey:kURIRepresentationKey]]] retain];
+	self = (SSManagedObject *)[context objectWithID:[psc managedObjectIDForURIRepresentation:(NSURL *)[decoder decodeObjectForKey:kURIRepresentationKey]]];
 	return self;
 }
 

@@ -26,8 +26,6 @@
 
 - (void)dealloc {
 	[self removeAllObjectObservers];
-	[_observers release];
-	[super dealloc];
 }
 
 
@@ -42,9 +40,6 @@
 	for (SSManagedObjectContextObserver *observer in _observers) {
 		[observer _processContextAfterSave:self insertedObject:insertedObjects updatedObjects:updatedObjects];
 	}
-	
-	[insertedObjects release];
-	[updatedObjects release];
 	
 	return sucess;
 }
