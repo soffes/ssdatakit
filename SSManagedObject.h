@@ -6,6 +6,8 @@
 //  Copyright (c) 2011 Sam Soffes. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 #import "SSManagedObjectContext.h"
 
 @interface SSManagedObject : NSManagedObject <NSCoding>

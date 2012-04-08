@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 Sam Soffes. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 #import "SSManagedObject.h"
 
 typedef void (^SSManagedObjectContextObserverObservationBlock)(NSSet *insertedObjectIDs, NSSet *updatedObjectIDs);
