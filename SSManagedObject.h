@@ -6,7 +6,7 @@
 //  Copyright (c) 2011 Sam Soffes. All rights reserved.
 //
 
-@class SSManagedObjectContext;
+#import "SSManagedObjectContext.h"
 
 @interface SSManagedObject : NSManagedObject <NSCoding>
 
@@ -24,6 +24,7 @@
 + (NSString *)entityName;
 + (NSEntityDescription *)entity;
 + (NSEntityDescription *)entityWithContext:(NSManagedObjectContext *)context;
++ (NSArray *)defaultSortDescriptors;
 
 // Initializing
 - (id)initWithContext:(NSManagedObjectContext *)context;

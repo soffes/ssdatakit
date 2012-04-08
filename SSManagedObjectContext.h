@@ -6,8 +6,6 @@
 //  Copyright (c) 2012 Sam Soffes. All rights reserved.
 //
 
-#import "SSManagedObject.h"
-
 @class SSManagedObjectContextObserver;
 
 @interface SSManagedObjectContext : NSManagedObjectContext

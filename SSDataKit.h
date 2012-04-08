@@ -16,3 +16,8 @@
 #import "SSManagedObjectController.h"
 
 #import "NSManagedObjectContext+SSDataKitAdditions.h"
+
+#if TARGET_OS_IPHONE
+	#import "SSManagedViewController.h"
+	#import "SSManagedTableViewController.h"
+#endif

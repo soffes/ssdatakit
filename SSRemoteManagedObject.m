@@ -1,6 +1,6 @@
 //
 //  SSRemoteManagedObject.m
-//  Cheddar
+//  SSDataKit
 //
 //  Created by Sam Soffes on 4/7/12.
 //  Copyright (c) 2012 Sam Soffes. All rights reserved.
@@ -44,7 +44,7 @@
 + (id)existingObjectWithRemoteID:(NSNumber *)remoteID context:(NSManagedObjectContext *)context {
 	// Default to the main context
 	if (!context) {
-		context = (NSManagedObjectContext *)[self mainContext];
+		context = [self mainContext];
 	}
 	
 	// Create the fetch request for the ID
@@ -87,7 +87,7 @@
 	
 	// Default to the main context
 	if (!context) {
-		context = (NSManagedObjectContext *)[self mainContext];
+		context = [self mainContext];
 	}
 	
 	// Find or create the object
@@ -124,7 +124,7 @@
 	
 	// Default to the main context
 	if (!context) {
-		context = (NSManagedObjectContext *)[self mainContext];
+		context = [self mainContext];
 	}
 	
 	// Lookup the object
@@ -215,6 +215,14 @@
 	
 	NSAssert1(NO, @"[SSRemoteManagedObject] Failed to parse date: %@", dateStringOrDateNumber);	
 	return nil;
+}
+
+
++ (NSArray *)defaultSortDescriptors {
+	return [NSArray arrayWithObjects:
+			[NSSortDescriptor sortDescriptorWithKey:@"createdAt" ascending:NO],
+			[NSSortDescriptor sortDescriptorWithKey:@"remoteID" ascending:NO],
+			nil];
 }
 
 @end

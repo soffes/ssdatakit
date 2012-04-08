@@ -106,6 +106,12 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 }
 
 
++ (NSArray *)defaultSortDescriptors {
+	// Subclasses should override this
+	return nil;
+}
+
+
 #pragma mark - NSObject
 
 - (id)init {
