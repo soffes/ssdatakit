@@ -157,7 +157,7 @@
 
 + (NSDate *)parseDate:(id)dateStringOrDateNumber {
 	// Return nil if nil is given
-	if (!dateStringOrDateNumber) {
+	if (!dateStringOrDateNumber || dateStringOrDateNumber == [NSNull null]) {
 		return nil;
 	}
 	
