@@ -39,6 +39,7 @@
 - (NSRelationshipDescription *)relationshipForKeyPath:(NSString *)keyPath;
 
 // Manipulation
+- (void)save;
 - (void)delete;
 
 @end

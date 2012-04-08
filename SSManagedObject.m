@@ -197,8 +197,13 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 #pragma mark - Manipulation
 
+- (void)save {
+	[self.managedObjectContext save:nil];
+}
+
+
 - (void)delete {
-	[[self managedObjectContext] deleteObject:self];
+	[self.managedObjectContext deleteObject:self];
 }
 
 
