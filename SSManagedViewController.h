@@ -18,6 +18,7 @@
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
 
 - (NSFetchRequest *)fetchRequest;
+- (Class)entityClass;
 - (NSArray *)sortDescriptors;
 - (NSPredicate *)predicate;
 - (NSManagedObjectContext *)managedObjectContext;

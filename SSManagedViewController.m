@@ -18,10 +18,10 @@
 
 - (NSFetchedResultsController *)fetchedResultsController {
 	if (!_fetchedResultsController) {
-		_fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:[self fetchRequest]
-																		managedObjectContext:[self managedObjectContext]
-																		  sectionNameKeyPath:[self sectionNameKeyPath]
-																				   cacheName:[self cacheName]];
+		_fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:self.fetchRequest
+																		managedObjectContext:self.managedObjectContext
+																		  sectionNameKeyPath:self.sectionNameKeyPath
+																				   cacheName:self.cacheName];
 		_fetchedResultsController.delegate = self;
 		[_fetchedResultsController performFetch:nil];
 	}
@@ -45,12 +45,21 @@
 #pragma mark - Configuration
 
 - (NSFetchRequest *)fetchRequest {
-	return nil;
+	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+	fetchRequest.entity = [self.entityClass entityWithContext:self.managedObjectContext];
+	fetchRequest.sortDescriptors = self.sortDescriptors;
+	fetchRequest.predicate = self.predicate;
+	return fetchRequest;
+}
+
+
+- (Class)entityClass {
+	return [SSManagedObject class];
 }
 
 
 - (NSArray *)sortDescriptors {
-	return nil;
+	return [self.entityClass defaultSortDescriptors];
 }
 
 
@@ -60,7 +69,7 @@
 
 
 - (NSManagedObjectContext *)managedObjectContext {
-	return [SSManagedObject mainContext];
+	return [self.entityClass mainContext];
 }
 
 
