@@ -141,6 +141,10 @@
 
 
 - (void)unpackDictionary:(NSDictionary *)dictionary {
+	if (!self.isRemote) {
+		self.remoteID = [dictionary objectForKey:@"id"];
+	}
+	
 	self.createdAt = [[self class] parseDate:[dictionary objectForKey:@"created_at"]];
 	self.updatedAt = [[self class] parseDate:[dictionary objectForKey:@"updated_at"]];
 }
