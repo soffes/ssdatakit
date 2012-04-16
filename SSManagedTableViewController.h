@@ -13,7 +13,7 @@
 
 @interface SSManagedTableViewController : SSManagedViewController <UITableViewDataSource, UITableViewDelegate>
 
-@property (nonatomic, retain) UITableView *tableView;
+@property (nonatomic, strong, readonly) UITableView *tableView;
 @property (nonatomic) BOOL clearsSelectionOnViewWillAppear;
 
 - (id)initWithStyle:(UITableViewStyle)style;

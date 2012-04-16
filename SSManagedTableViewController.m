@@ -32,8 +32,11 @@
 #pragma mark - UIViewController
 
 - (void)loadView {
-	_tableView.frame = [[UIScreen mainScreen] applicationFrame];
-	self.view = _tableView;
+	[super loadView];
+	
+	// Add the table view as a subview for increased flexibility
+	_tableView.frame = self.view.bounds;
+	[self.view addSubview:_tableView];
 }
 
 
