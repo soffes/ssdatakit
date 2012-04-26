@@ -131,12 +131,18 @@
 #pragma mark - NSFetchedResultsControllerDelegate
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
+	if (self.ignoreChange) {
+		return;
+	}
     [self.tableView beginUpdates];
 }
 
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
 		   atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
+	if (self.ignoreChange) {
+		return;
+	}
 	
     switch(type) {
         case NSFetchedResultsChangeInsert: {
@@ -157,6 +163,9 @@
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
 	   atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
 	  newIndexPath:(NSIndexPath *)newIndexPath {
+	if (self.ignoreChange) {
+		return;
+	}
 	
     UITableView *tableView = self.tableView;
 	
@@ -190,6 +199,9 @@
 
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+	if (self.ignoreChange) {
+		return;
+	}
     [self.tableView endUpdates];
 }
 

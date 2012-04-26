@@ -13,6 +13,7 @@
 
 @synthesize managedObject = _managedObject;
 @synthesize fetchedResultsController = _fetchedResultsController;
+@synthesize ignoreChange = _ignoreChange;
 
 #pragma mark - Accessors
 
