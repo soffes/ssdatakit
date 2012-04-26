@@ -17,6 +17,7 @@
 @property (nonatomic, strong) SSManagedObject *managedObject;
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
 
++ (Class)fetchedResultsControllerClass;
 - (NSFetchRequest *)fetchRequest;
 - (Class)entityClass;
 - (NSArray *)sortDescriptors;

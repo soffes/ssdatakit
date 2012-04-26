@@ -18,7 +18,7 @@
 
 - (NSFetchedResultsController *)fetchedResultsController {
 	if (!_fetchedResultsController) {
-		_fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:self.fetchRequest
+		_fetchedResultsController = [[[[self class] fetchedResultsControllerClass] alloc] initWithFetchRequest:self.fetchRequest
 																		managedObjectContext:self.managedObjectContext
 																		  sectionNameKeyPath:self.sectionNameKeyPath
 																				   cacheName:self.cacheName];
@@ -43,6 +43,11 @@
 
 
 #pragma mark - Configuration
+
++ (Class)fetchedResultsControllerClass {
+	return [NSFetchedResultsController class];
+}
+
 
 - (NSFetchRequest *)fetchRequest {
 	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
