@@ -1,0 +1,51 @@
+//
+//  SSFilteredResultsSection.m
+//  Cheddar
+//
+//  Created by Sam Soffes on 4/30/12.
+//  Copyright (c) 2012 Sam Soffes. All rights reserved.
+//
+
+#import "SSFilteredResultsSection.h"
+
+@implementation SSFilteredResultsSection {
+	NSMutableArray *_objects;
+}
+
+@synthesize internalName = _internalName;
+@synthesize internalIndexTitle = _internalIndexTitle;
+@synthesize objects = _objects;
+
+- (id)init {
+    if ((self = [super init])) {
+		_objects = [[NSMutableArray alloc] init];
+	}	
+	return self;
+}
+
+
+- (void)addObject:(NSObject *)o {
+	[_objects addObject:o];
+}
+
+
+- (NSString *) name {
+	return _internalName;
+}
+
+
+- (NSString *) indexTitle {
+	return _internalIndexTitle;
+}
+
+
+- (NSUInteger) numberOfObjects {
+	return _objects.count;
+}
+
+
+- (NSArray *)objects {
+	return _objects;
+}
+
+@end
