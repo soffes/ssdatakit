@@ -89,7 +89,7 @@
 
 
 - (void)_updateObjectsForCurrentFilter:(SSFilteredResultsFilter *)currentFilter newFilter:(SSFilteredResultsFilter *)newFilter {
-	if ([self.delegate respondsToSelector:@selector(controllerWillChangeContent:)]) {
+	if ([(NSObject *)self.delegate respondsToSelector:@selector(controllerWillChangeContent:)]) {
 		[self.delegate controllerWillChangeContent:self.fetchedResultsController];
 	}
 	
@@ -103,7 +103,7 @@
 				NSObject *o = [section.objects objectAtIndex:j];
 				
 				if (!currentFilter.predicate(o)) {
-					if ([self.delegate respondsToSelector:@selector(controller:didChangeObject:atIndexPath:forChangeType:newIndexPath:)]) {
+					if ([(NSObject *)self.delegate respondsToSelector:@selector(controller:didChangeObject:atIndexPath:forChangeType:newIndexPath:)]) {
 						[self.delegate controller:self.fetchedResultsController
 								  didChangeObject:o
 									  atIndexPath:nil
@@ -129,7 +129,7 @@
 				NSObject *o = [section.objects objectAtIndex:j];
 				
 				if (!newFilter.predicate(o)) {
-					if ([self.delegate respondsToSelector:@selector(controller:didChangeObject:atIndexPath:forChangeType:newIndexPath:)]) {
+					if ([(NSObject *)self.delegate respondsToSelector:@selector(controller:didChangeObject:atIndexPath:forChangeType:newIndexPath:)]) {
 						[self.delegate controller:self.fetchedResultsController
 								  didChangeObject:o
 									  atIndexPath:[NSIndexPath indexPathForRow:j inSection:i]
@@ -152,7 +152,7 @@
 			for(int j = 0; j < section.objects.count; j++) {
 				NSObject *o = [section.objects objectAtIndex:j];
 				
-				if ([self.delegate respondsToSelector:@selector(controller:didChangeObject:atIndexPath:forChangeType:newIndexPath:)]) {
+				if ([(NSObject *)self.delegate respondsToSelector:@selector(controller:didChangeObject:atIndexPath:forChangeType:newIndexPath:)]) {
 					[self.delegate controller:self.fetchedResultsController
 							  didChangeObject:o
 								  atIndexPath:[NSIndexPath indexPathForRow:j inSection:i]
@@ -177,7 +177,7 @@
 				if (newFilter.predicate(o)) {
 					[filteredSection addObject:o];
 					
-					if ([self.delegate respondsToSelector:@selector(controller:didChangeObject:atIndexPath:forChangeType:newIndexPath:)]) {
+					if ([(NSObject *)self.delegate respondsToSelector:@selector(controller:didChangeObject:atIndexPath:forChangeType:newIndexPath:)]) {
 						[self.delegate controller:self.fetchedResultsController
 								  didChangeObject:o
 									  atIndexPath:nil
@@ -191,7 +191,7 @@
 		}
 	}
 	
-	if ([self.delegate respondsToSelector:@selector(controllerDidChangeContent:)]) {
+	if ([(NSObject *)self.delegate respondsToSelector:@selector(controllerDidChangeContent:)]) {
 		[self.delegate controllerDidChangeContent:self.fetchedResultsController];
 	}
 }
@@ -298,14 +298,14 @@
 #pragma mark NSFetchedResultsControllerDelegate
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
-	if ([self.delegate respondsToSelector:@selector(controllerWillChangeContent:)]) {
+	if ([(NSObject *)self.delegate respondsToSelector:@selector(controllerWillChangeContent:)]) {
 		[self.delegate controllerWillChangeContent:controller];		
 	}
 }
 
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
-	if ([self.delegate respondsToSelector:@selector(controller:didChangeObject:atIndexPath:forChangeType:newIndexPath:)]) {
+	if ([(NSObject *)self.delegate respondsToSelector:@selector(controller:didChangeObject:atIndexPath:forChangeType:newIndexPath:)]) {
 		// TODO: Currently change notifications for deletes are not supported while filtering
 		if (type != NSFetchedResultsChangeDelete) {
 			indexPath = [self indexPathForObject:anObject];
@@ -316,14 +316,14 @@
 
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
-	if ([self.delegate respondsToSelector:@selector(controller:didChangeSection:atIndex:forChangeType:)]) {
+	if ([(NSObject *)self.delegate respondsToSelector:@selector(controller:didChangeSection:atIndex:forChangeType:)]) {
 		[self.delegate controller:controller didChangeSection:sectionInfo atIndex:sectionIndex forChangeType:type];
 	}
 }
 
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-	if ([self.delegate respondsToSelector:@selector(controllerDidChangeContent:)]) {
+	if ([(NSObject *)self.delegate respondsToSelector:@selector(controllerDidChangeContent:)]) {
 		[self.delegate controllerDidChangeContent:controller];
 	}
 }

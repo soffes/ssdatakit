@@ -12,8 +12,6 @@
 #import <CoreData/CoreData.h>
 #import "SSFilteredResultsFilter.h"
 
-@protocol SSFilterableFetchedResultsControllerDelegate;
-
 // Even though this is a subclass of NSObject, it is a drop-in replacement for NSFetchedResultsController. It implements
 // all of the methods and properties NSFetchedResultsController implements.
 @interface SSFilterableFetchedResultsController : NSObject
@@ -22,7 +20,7 @@
 @property (nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, readonly) NSString *sectionNameKeyPath;
 @property (nonatomic, readonly) NSString *cacheName;
-@property (nonatomic, assign) id<SSFilterableFetchedResultsControllerDelegate> delegate;
+@property (nonatomic, assign) id<NSFetchedResultsControllerDelegate> delegate;
 @property (nonatomic, readonly) NSArray *fetchedObjects;
 @property (nonatomic, readonly) NSArray *sections;
 
@@ -42,18 +40,5 @@
 @property (nonatomic, readonly) NSArray *sectionIndexTitles;
 - (NSString *)sectionIndexTitleForSectionName:(NSString *)sectionName;
 - (NSInteger)sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)sectionIndex;
-
-@end
-
-
-@protocol SSFilterableFetchedResultsControllerDelegate <NSObject>
-
-@optional
-
-- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath;
-- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type;
-- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller;
-- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller;
-- (NSString *)controller:(NSFetchedResultsController *)controller sectionIndexTitleForSectionName:(NSString *)sectionName;
 
 @end
