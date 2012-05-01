@@ -306,7 +306,10 @@
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
 	if ([self.delegate respondsToSelector:@selector(controller:didChangeObject:atIndexPath:forChangeType:newIndexPath:)]) {
-		indexPath = [self indexPathForObject:anObject];
+		// TODO: Currently change notifications for deletes are not supported while filtering
+		if (type != NSFetchedResultsChangeDelete) {
+			indexPath = [self indexPathForObject:anObject];
+		}
 		[self.delegate controller:controller didChangeObject:anObject atIndexPath:indexPath forChangeType:type newIndexPath:newIndexPath];
 	}
 }
