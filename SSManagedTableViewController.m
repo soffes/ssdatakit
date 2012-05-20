@@ -85,14 +85,6 @@
 }
 
 
-
-#pragma mark - Accessing Objects
-
-- (id)objectAtIndexPath:(NSIndexPath *)indexPath {
-	return [self.fetchedResultsController objectAtIndexPath:indexPath];
-}
-
-
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -168,6 +160,8 @@
 	}
 	
     UITableView *tableView = self.tableView;
+	indexPath = [self viewIndexPathForFetchedIndexPath:indexPath];
+	newIndexPath = [self viewIndexPathForFetchedIndexPath:newIndexPath];
 	
     switch(type) {
         case NSFetchedResultsChangeInsert: {

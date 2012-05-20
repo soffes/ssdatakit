@@ -88,4 +88,21 @@
 	return nil;
 }
 
+
+#pragma mark - Accessing Objects
+
+- (NSIndexPath *)viewIndexPathForFetchedIndexPath:(NSIndexPath *)fetchedIndexPath {
+	return fetchedIndexPath;
+}
+
+
+- (NSIndexPath *)fetchedIndexPathForViewIndexPath:(NSIndexPath *)viewIndexPath {
+	return viewIndexPath;
+}
+
+
+- (id)objectForViewIndexPath:(NSIndexPath *)indexPath {
+	return [self.fetchedResultsController objectAtIndexPath:[self fetchedIndexPathForViewIndexPath:indexPath]];
+}
+
 @end

@@ -27,4 +27,8 @@
 - (NSString *)sectionNameKeyPath;
 - (NSString *)cacheName;
 
+- (NSIndexPath *)viewIndexPathForFetchedIndexPath:(NSIndexPath *)fetchedIndexPath;
+- (NSIndexPath *)fetchedIndexPathForViewIndexPath:(NSIndexPath *)viewIndexPath;
+- (id)objectForViewIndexPath:(NSIndexPath *)indexPath;
+
 @end

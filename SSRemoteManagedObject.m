@@ -168,7 +168,7 @@
 	
 	// Parse number
 	if ([dateStringOrDateNumber isKindOfClass:[NSNumber class]]) {
-		[NSDate dateWithTimeIntervalSince1970:[dateStringOrDateNumber doubleValue]];
+		return [NSDate dateWithTimeIntervalSince1970:[dateStringOrDateNumber doubleValue]];
 	}
 	
 	// Parse string

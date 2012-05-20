@@ -19,6 +19,5 @@
 - (id)initWithStyle:(UITableViewStyle)style;
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
-- (id)objectAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
