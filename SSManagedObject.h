@@ -17,6 +17,8 @@
 
 // Configuring the Persistent Store
 + (NSPersistentStoreCoordinator *)persistentStoreCoordinator;
++ (NSDictionary *)persistentStoreOptions;
++ (void)setPersistentStoreOptions:(NSDictionary *)options;
 + (NSManagedObjectModel *)managedObjectModel;
 + (void)setManagedObjectModel:(NSManagedObjectModel *)model;
 + (NSURL *)persistentStoreURL;
@@ -41,5 +43,8 @@
 // Manipulation
 - (void)save;
 - (void)delete;
+
+// Resetting
++ (void)resetPersistentStore;
 
 @end

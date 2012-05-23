@@ -9,8 +9,10 @@
 #import "SSManagedObject.h"
 #import "SSManagedObjectContext.h"
 
+static SSManagedObjectContext *kManagedObjectContext = nil;
 static NSManagedObjectModel *kManagedObjectModel = nil;
 static NSURL *kPersistentStoreURL = nil;
+static NSDictionary *kPersistentStoreOptions = nil;
 static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 @implementation SSManagedObject
@@ -18,14 +20,11 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 #pragma mark - Managing Main Context
 
 + (SSManagedObjectContext *)mainContext {
-	static SSManagedObjectContext *mainContext = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		mainContext = [[SSManagedObjectContext alloc] init];
-		mainContext.persistentStoreCoordinator = [self persistentStoreCoordinator];
-	});
-	
-	return mainContext;
+	if (!kManagedObjectContext) {
+		kManagedObjectContext = [[SSManagedObjectContext alloc] init];
+		kManagedObjectContext.persistentStoreCoordinator = [self persistentStoreCoordinator];
+	}
+	return kManagedObjectContext;
 }
 
 
@@ -33,31 +32,12 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 	static NSPersistentStoreCoordinator *persistentStoreCoordinator = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
-		NSManagedObjectModel *model = [self managedObjectModel];
-		
-		// Default to merged model if there isn't one
-		if (!model) {
-			model = [NSManagedObjectModel mergedModelFromBundles:nil];
-			
-			// Set the model if that's the model we end up using
-			if (model) {
-				[self setManagedObjectModel:model];
-			} else {
-				[[NSException exceptionWithName:@"SSManagedObjectMissingModel" reason:@"You need to provide a managed model." userInfo:nil] raise];
-			}
-		}
-		
+		NSManagedObjectModel *model = [self managedObjectModel];		
 		persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
 		
 		NSURL *url = [self persistentStoreURL];
-		if (!url) {
-			NSURL *documentsURL = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-			url = [documentsURL URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqlite", applicationName]];
-		}
-		
 		NSError *error = nil;
-		NSDictionary *storeOptions = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
+		NSDictionary *storeOptions = [self persistentStoreOptions];
 		[persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:url options:storeOptions error:&error];
 	});
 	
@@ -65,7 +45,35 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 }
 
 
++ (NSDictionary *)persistentStoreOptions {
+	if (!kPersistentStoreOptions) {
+		[self setPersistentStoreOptions:[NSDictionary dictionaryWithObjectsAndKeys:
+										 [NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,
+										 [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption,
+										 nil]];
+	}
+	return kPersistentStoreOptions;
+}
+
+
++ (void)setPersistentStoreOptions:(NSDictionary *)options {
+	kPersistentStoreOptions = options;
+}
+
+
 + (NSManagedObjectModel *)managedObjectModel {
+	if (!kManagedObjectModel) {
+		// Default model
+		NSManagedObjectModel *model = [NSManagedObjectModel mergedModelFromBundles:nil];
+
+		// Ensure a model is loaded
+		if (!model) {
+			[[NSException exceptionWithName:@"SSManagedObjectMissingModel" reason:@"You need to provide a managed model." userInfo:nil] raise];
+			return nil;
+		}
+
+		[self setManagedObjectModel:model];
+	}
 	return kManagedObjectModel;
 }
 
@@ -76,6 +84,11 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 
 + (NSURL *)persistentStoreURL {
+	if (!kPersistentStoreURL) {
+		NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
+		NSURL *documentsURL = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+		[self setPersistentStoreURL:[documentsURL URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqlite", applicationName]]];
+	}
 	return kPersistentStoreURL;
 }
 
@@ -204,6 +217,19 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 - (void)delete {
 	[self.managedObjectContext deleteObject:self];
+}
+
+
+#pragma mark - Resetting
+
++ (void)resetPersistentStore {
+	kManagedObjectContext = nil;
+	NSURL *url = [self persistentStoreURL];	
+	NSPersistentStoreCoordinator *psc = [SSManagedObject persistentStoreCoordinator];
+	if ([psc removePersistentStore:psc.persistentStores.lastObject error:nil]) {
+		[[NSFileManager defaultManager] removeItemAtURL:url error:nil];
+		[psc addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:url options:[SSManagedObject persistentStoreOptions] error:nil];
+	}
 }
 
 
