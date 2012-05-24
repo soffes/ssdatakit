@@ -17,7 +17,6 @@
 @property (nonatomic) BOOL clearsSelectionOnViewWillAppear;
 
 - (id)initWithStyle:(UITableViewStyle)style;
-
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 
 @end

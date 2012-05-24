@@ -9,11 +9,16 @@
 #import "SSManagedViewController.h"
 #import "SSManagedObject.h"
 
+@interface SSManagedViewController ()
+- (void)_updateEmptyView:(BOOL)animated;
+@end
+
 @implementation SSManagedViewController
 
 @synthesize managedObject = _managedObject;
 @synthesize fetchedResultsController = _fetchedResultsController;
 @synthesize ignoreChange = _ignoreChange;
+@synthesize emptyView = _emptyView;
 
 #pragma mark - Accessors
 
@@ -40,6 +45,14 @@
 
 - (void)dealloc {
 	self.fetchedResultsController = nil;
+}
+
+
+#pragma mark - UIViewController
+
+- (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	[self _updateEmptyView:NO];
 }
 
 
@@ -103,6 +116,47 @@
 
 - (id)objectForViewIndexPath:(NSIndexPath *)indexPath {
 	return [self.fetchedResultsController objectAtIndexPath:[self fetchedIndexPathForViewIndexPath:indexPath]];
+}
+
+
+#pragma mark - Private
+
+- (void)_updateEmptyView:(BOOL)animated {
+	if (!self.emptyView) {
+		return;
+	}
+
+	NSInteger objectCount = self.fetchedResultsController.fetchedObjects.count;
+	if (self.emptyView.superview && objectCount > 0) {
+		if (animated) {
+			[UIView animateWithDuration:0.3 delay:0.0f options:UIViewAnimationOptionAllowUserInteraction animations:^{
+				self.emptyView.alpha = 0.0f;
+			} completion:^(BOOL finished) {
+				[self.emptyView removeFromSuperview];
+			}];
+		} else {
+			[self.emptyView removeFromSuperview];
+		}
+	} else if (!self.emptyView.superview && objectCount == 0) {
+		if (animated) {
+			self.emptyView.alpha = 0.0f;
+			[self.view addSubview:self.emptyView];
+			[UIView animateWithDuration:0.3 delay:0.0f options:UIViewAnimationOptionAllowUserInteraction animations:^{
+				self.emptyView.alpha = 1.0f;
+			} completion:nil];
+		} else {
+			self.emptyView.frame = self.view.bounds;
+			self.emptyView.alpha = 1.0f;
+			[self.view addSubview:self.emptyView];
+		}
+	}
+}
+
+
+#pragma mark - NSFetchedResultsControllerDelegate
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+	[self _updateEmptyView:YES];
 }
 
 @end

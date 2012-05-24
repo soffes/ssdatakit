@@ -193,6 +193,7 @@
 
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+	[super controllerDidChangeContent:controller];
 	if (self.ignoreChange) {
 		return;
 	}
