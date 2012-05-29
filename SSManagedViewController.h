@@ -17,7 +17,9 @@
 @property (nonatomic, strong) SSManagedObject *managedObject;
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
 @property (nonatomic, assign) BOOL ignoreChange;
-@property (nonatomic, strong) UIView *emptyView;
+@property (nonatomic, assign) BOOL loading;
+@property (nonatomic, strong) UIView *noContentView;
+@property (nonatomic, strong) UIView *loadingView;
 
 + (Class)fetchedResultsControllerClass;
 - (NSFetchRequest *)fetchRequest;
@@ -31,5 +33,13 @@
 - (NSIndexPath *)viewIndexPathForFetchedIndexPath:(NSIndexPath *)fetchedIndexPath;
 - (NSIndexPath *)fetchedIndexPathForViewIndexPath:(NSIndexPath *)viewIndexPath;
 - (id)objectForViewIndexPath:(NSIndexPath *)indexPath;
+
+- (void)setLoading:(BOOL)loading animated:(BOOL)animated;
+- (BOOL)hasContent;
+- (void)updatePlaceholderViews:(BOOL)animated;
+- (void)showLoadingView:(BOOL)animated;
+- (void)hideLoadingView:(BOOL)animated;
+- (void)showNoContentView:(BOOL)animated;
+- (void)hideNoContentView:(BOOL)animated;
 
 @end

@@ -9,16 +9,15 @@
 #import "SSManagedViewController.h"
 #import "SSManagedObject.h"
 
-@interface SSManagedViewController ()
-- (void)_updateEmptyView:(BOOL)animated;
-@end
-
 @implementation SSManagedViewController
 
 @synthesize managedObject = _managedObject;
 @synthesize fetchedResultsController = _fetchedResultsController;
 @synthesize ignoreChange = _ignoreChange;
-@synthesize emptyView = _emptyView;
+@synthesize loading = _loading;
+@synthesize noContentView = _noContentView;
+@synthesize loadingView = _loadingView;
+
 
 #pragma mark - Accessors
 
@@ -41,6 +40,11 @@
 }
 
 
+- (void)setLoading:(BOOL)loading {
+	[self setLoading:loading animated:YES];
+}
+
+
 #pragma mark - NSObject
 
 - (void)dealloc {
@@ -52,7 +56,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-	[self _updateEmptyView:NO];
+	[self updatePlaceholderViews:NO];
 }
 
 
@@ -119,36 +123,120 @@
 }
 
 
-#pragma mark - Private
+#pragma mark - Placeholders
 
-- (void)_updateEmptyView:(BOOL)animated {
-	if (!self.emptyView) {
+- (void)setLoading:(BOOL)loading animated:(BOOL)animated {
+	_loading = loading;
+	[self updatePlaceholderViews:animated];
+}
+
+
+- (BOOL)hasContent {
+	return self.fetchedResultsController.fetchedObjects.count > 0;
+}
+
+
+- (void)updatePlaceholderViews:(BOOL)animated {
+	if (self.hasContent) {
+		[self hideLoadingView:animated];
+		[self hideNoContentView:animated];
+		return;
+	}
+	
+	if (self.loading) {
+		[self hideNoContentView:animated];
+		[self showLoadingView:animated];
+	} else {
+		[self hideLoadingView:animated];
+		[self showNoContentView:animated];
+	}
+}
+
+
+- (void)showLoadingView:(BOOL)animated {
+	if (!self.loadingView) {
 		return;
 	}
 
-	NSInteger objectCount = self.fetchedResultsController.fetchedObjects.count;
-	if (self.emptyView.superview && objectCount > 0) {
-		if (animated) {
-			[UIView animateWithDuration:0.3 delay:0.0f options:UIViewAnimationOptionAllowUserInteraction animations:^{
-				self.emptyView.alpha = 0.0f;
-			} completion:^(BOOL finished) {
-				[self.emptyView removeFromSuperview];
-			}];
-		} else {
-			[self.emptyView removeFromSuperview];
-		}
-	} else if (!self.emptyView.superview && objectCount == 0) {
-		if (animated) {
-			self.emptyView.alpha = 0.0f;
-			[self.view addSubview:self.emptyView];
-			[UIView animateWithDuration:0.3 delay:0.0f options:UIViewAnimationOptionAllowUserInteraction animations:^{
-				self.emptyView.alpha = 1.0f;
-			} completion:nil];
-		} else {
-			self.emptyView.frame = self.view.bounds;
-			self.emptyView.alpha = 1.0f;
-			[self.view addSubview:self.emptyView];
-		}
+	self.loadingView.alpha = 0.0f;
+	self.loadingView.frame = self.view.bounds;
+	[self.view addSubview:self.loadingView];
+
+	void (^change)(void) = ^{
+		self.loadingView.alpha = 1.0f;
+	};
+
+
+	if (animated) {
+		[UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionAllowUserInteraction animations:change completion:nil];
+	} else {
+		change();
+	}
+}
+
+
+- (void)hideLoadingView:(BOOL)animated {
+	if (!self.loadingView) {
+		return;
+	}
+	
+	void (^change)(void) = ^{
+		self.loadingView.alpha = 0.0f;
+	};
+	
+	void (^completion)(BOOL finished) = ^(BOOL finished) {
+		[self.loadingView removeFromSuperview];
+	};
+	
+	if (animated) {
+		[UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionAllowUserInteraction animations:change completion:completion];
+	} else {
+		change();
+		completion(YES);
+	}
+}
+
+
+- (void)showNoContentView:(BOOL)animated {
+	if (!self.noContentView) {
+		return;
+	}
+	
+	self.noContentView.alpha = 0.0f;
+	self.noContentView.frame = self.view.bounds;
+	[self.view addSubview:self.noContentView];
+	
+	void (^change)(void) = ^{
+		self.noContentView.alpha = 1.0f;
+	};
+	
+	
+	if (animated) {
+		[UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionAllowUserInteraction animations:change completion:nil];
+	} else {
+		change();
+	}
+}
+
+
+- (void)hideNoContentView:(BOOL)animated {
+	if (!self.noContentView) {
+		return;
+	}
+	
+	void (^change)(void) = ^{
+		self.noContentView.alpha = 0.0f;
+	};
+	
+	void (^completion)(BOOL finished) = ^(BOOL finished) {
+		[self.noContentView removeFromSuperview];
+	};
+	
+	if (animated) {
+		[UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionAllowUserInteraction animations:change completion:completion];
+	} else {
+		change();
+		completion(YES);
 	}
 }
 
@@ -156,7 +244,7 @@
 #pragma mark - NSFetchedResultsControllerDelegate
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-	[self _updateEmptyView:YES];
+	[self updatePlaceholderViews:YES];
 }
 
 @end
