@@ -137,16 +137,21 @@
 
 
 - (void)updatePlaceholderViews:(BOOL)animated {
+	// There is content to be displayed
 	if (self.hasContent) {
+		// Hide the loading and content view
 		[self hideLoadingView:animated];
 		[self hideNoContentView:animated];
 		return;
 	}
-	
+
+	// There is no content to be displayed.
 	if (self.loading) {
+		// Show the loading view and hide the no content view
 		[self hideNoContentView:animated];
 		[self showLoadingView:animated];
 	} else {
+		// Show the no content view and hide the loading view
 		[self hideLoadingView:animated];
 		[self showNoContentView:animated];
 	}
@@ -154,7 +159,7 @@
 
 
 - (void)showLoadingView:(BOOL)animated {
-	if (!self.loadingView) {
+	if (!self.loadingView || self.loadingView.superview) {
 		return;
 	}
 
@@ -176,7 +181,7 @@
 
 
 - (void)hideLoadingView:(BOOL)animated {
-	if (!self.loadingView) {
+	if (!self.loadingView || !self.loadingView.superview) {
 		return;
 	}
 	
@@ -198,7 +203,7 @@
 
 
 - (void)showNoContentView:(BOOL)animated {
-	if (!self.noContentView) {
+	if (!self.noContentView || self.noContentView.superview) {
 		return;
 	}
 	
@@ -220,7 +225,7 @@
 
 
 - (void)hideNoContentView:(BOOL)animated {
-	if (!self.noContentView) {
+	if (!self.noContentView || !self.noContentView.superview) {
 		return;
 	}
 	
