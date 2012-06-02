@@ -129,6 +129,9 @@
 	
 	// Lookup the object
 	SSRemoteManagedObject *object = [[self class] existingObjectWithRemoteID:remoteID context:context];
+	if (!object) {
+		return nil;
+	}
 	
 	// Only unpack if necessary
 	if ([object shouldUnpackDictionary:dictionary]) {
