@@ -17,7 +17,7 @@
 @property (nonatomic, strong) SSManagedObject *managedObject;
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
 @property (nonatomic, assign) BOOL ignoreChange;
-@property (nonatomic, assign) BOOL loading;
+@property (nonatomic, assign, getter=isLoading) BOOL loading;
 @property (nonatomic, strong) UIView *noContentView;
 @property (nonatomic, strong) UIView *loadingView;
 

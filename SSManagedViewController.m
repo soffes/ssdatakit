@@ -137,8 +137,11 @@
 
 
 - (void)updatePlaceholderViews:(BOOL)animated {
+	// Disable animated changes for now since they are buggy
+	animated = NO;
+
 	// There is content to be displayed
-	if (self.hasContent) {
+	if ([self hasContent]) {
 		// Hide the loading and content view
 		[self hideLoadingView:animated];
 		[self hideNoContentView:animated];
@@ -146,7 +149,7 @@
 	}
 
 	// There is no content to be displayed.
-	if (self.loading) {
+	if ([self isLoading]) {
 		// Show the loading view and hide the no content view
 		[self hideNoContentView:animated];
 		[self showLoadingView:animated];
@@ -184,7 +187,7 @@
 	if (!self.loadingView || !self.loadingView.superview) {
 		return;
 	}
-	
+
 	void (^change)(void) = ^{
 		self.loadingView.alpha = 0.0f;
 	};
@@ -228,7 +231,7 @@
 	if (!self.noContentView || !self.noContentView.superview) {
 		return;
 	}
-	
+
 	void (^change)(void) = ^{
 		self.noContentView.alpha = 0.0f;
 	};
