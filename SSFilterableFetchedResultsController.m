@@ -235,6 +235,10 @@
 
 
 - (id)objectAtIndexPath:(NSIndexPath *)indexPath {
+	if (!indexPath) {
+		return nil;
+	}
+	
 	if (!self.currentFilter) {
 		return [self.fetchedResultsController objectAtIndexPath:indexPath];
 	} else {
