@@ -39,6 +39,9 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 		NSError *error = nil;
 		NSDictionary *storeOptions = [self persistentStoreOptions];
 		[persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:url options:storeOptions error:&error];
+		if (error) {
+			NSLog(@"[SSDataKit] Failed to add persistent store: %@ %@", error, error.userInfo);
+		}
 	});
 	
 	return persistentStoreCoordinator;
