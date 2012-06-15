@@ -93,9 +93,25 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 + (NSURL *)persistentStoreURL {
 	if (!__persistentStoreURL) {
-		NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
+		NSDictionary *applicationInfo = [[NSBundle mainBundle] infoDictionary];
+#if TARGET_OS_IPHONE
+		NSString *applicationName = [applicationInfo objectForKey:@"CFBundleDisplayName"];
 		NSURL *documentsURL = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-		[self setPersistentStoreURL:[documentsURL URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqlite", applicationName]]];
+		NSURL *url = [documentsURL URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqlite", applicationName]];
+#else
+		NSString *applicationName = [applicationInfo objectForKey:@"CFBundleName"];
+		NSFileManager *fileManager = [NSFileManager defaultManager];
+		NSURL *applicationSupportURL = [[fileManager URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask] lastObject];
+		applicationSupportURL = [applicationSupportURL URLByAppendingPathComponent:applicationName];
+
+		NSDictionary *properties = [applicationSupportURL resourceValuesForKeys:[NSArray arrayWithObject:NSURLIsDirectoryKey] error:nil];
+		if (!properties) {
+			[fileManager createDirectoryAtPath:[applicationSupportURL path] withIntermediateDirectories:YES attributes:nil error:nil];
+		}
+		
+		NSURL *url = [applicationSupportURL URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqlite", applicationName]];
+#endif
+		[self setPersistentStoreURL:url];
 	}
 	return __persistentStoreURL;
 }
