@@ -14,6 +14,7 @@
 
 // Accessing the Main Context
 + (SSManagedObjectContext *)mainContext;
++ (BOOL)hasMainContext;
 
 // Configuring the Persistent Store
 + (NSPersistentStoreCoordinator *)persistentStoreCoordinator;

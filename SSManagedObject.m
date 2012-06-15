@@ -28,6 +28,11 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 }
 
 
++ (BOOL)hasMainContext {
+	return kManagedObjectContext != nil;
+}
+
+
 + (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
 	static NSPersistentStoreCoordinator *persistentStoreCoordinator = nil;
 	static dispatch_once_t onceToken;
