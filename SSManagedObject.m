@@ -9,10 +9,10 @@
 #import "SSManagedObject.h"
 #import "SSManagedObjectContext.h"
 
-static SSManagedObjectContext *kManagedObjectContext = nil;
-static NSManagedObjectModel *kManagedObjectModel = nil;
-static NSURL *kPersistentStoreURL = nil;
-static NSDictionary *kPersistentStoreOptions = nil;
+static SSManagedObjectContext *__managedObjectContext = nil;
+static NSManagedObjectModel *__managedObjectModel = nil;
+static NSURL *__persistentStoreURL = nil;
+static NSDictionary *__persistentStoreOptions = nil;
 static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 @implementation SSManagedObject
@@ -20,16 +20,16 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 #pragma mark - Managing Main Context
 
 + (SSManagedObjectContext *)mainContext {
-	if (!kManagedObjectContext) {
-		kManagedObjectContext = [[SSManagedObjectContext alloc] init];
-		kManagedObjectContext.persistentStoreCoordinator = [self persistentStoreCoordinator];
+	if (!__managedObjectContext) {
+		__managedObjectContext = [[SSManagedObjectContext alloc] init];
+		__managedObjectContext.persistentStoreCoordinator = [self persistentStoreCoordinator];
 	}
-	return kManagedObjectContext;
+	return __managedObjectContext;
 }
 
 
 + (BOOL)hasMainContext {
-	return kManagedObjectContext != nil;
+	return __managedObjectContext != nil;
 }
 
 
@@ -54,23 +54,23 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 
 + (NSDictionary *)persistentStoreOptions {
-	if (!kPersistentStoreOptions) {
+	if (!__persistentStoreOptions) {
 		[self setPersistentStoreOptions:[NSDictionary dictionaryWithObjectsAndKeys:
 										 [NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,
 										 [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption,
 										 nil]];
 	}
-	return kPersistentStoreOptions;
+	return __persistentStoreOptions;
 }
 
 
 + (void)setPersistentStoreOptions:(NSDictionary *)options {
-	kPersistentStoreOptions = options;
+	__persistentStoreOptions = options;
 }
 
 
 + (NSManagedObjectModel *)managedObjectModel {
-	if (!kManagedObjectModel) {
+	if (!__managedObjectModel) {
 		// Default model
 		NSManagedObjectModel *model = [NSManagedObjectModel mergedModelFromBundles:nil];
 
@@ -82,27 +82,27 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 		[self setManagedObjectModel:model];
 	}
-	return kManagedObjectModel;
+	return __managedObjectModel;
 }
 
 
 + (void)setManagedObjectModel:(NSManagedObjectModel *)model {
-	kManagedObjectModel = model;
+	__managedObjectModel = model;
 }
 
 
 + (NSURL *)persistentStoreURL {
-	if (!kPersistentStoreURL) {
+	if (!__persistentStoreURL) {
 		NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
 		NSURL *documentsURL = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 		[self setPersistentStoreURL:[documentsURL URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqlite", applicationName]]];
 	}
-	return kPersistentStoreURL;
+	return __persistentStoreURL;
 }
 
 
 + (void)setPersistentStoreURL:(NSURL *)url {
-	kPersistentStoreURL = url;
+	__persistentStoreURL = url;
 }
 
 
@@ -231,7 +231,7 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 #pragma mark - Resetting
 
 + (void)resetPersistentStore {
-	kManagedObjectContext = nil;
+	__managedObjectContext = nil;
 	NSURL *url = [self persistentStoreURL];	
 	NSPersistentStoreCoordinator *psc = [SSManagedObject persistentStoreCoordinator];
 	if ([psc removePersistentStore:psc.persistentStores.lastObject error:nil]) {
