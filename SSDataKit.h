@@ -11,9 +11,6 @@
 
 #import "SSManagedObject.h"
 #import "SSRemoteManagedObject.h"
-#import "SSManagedObjectContext.h"
-#import "SSManagedObjectContextObserver.h"
-#import "SSManagedObjectController.h"
 
 #import "NSManagedObjectContext+SSDataKitAdditions.h"
 

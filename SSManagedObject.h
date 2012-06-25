@@ -8,12 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-#import "SSManagedObjectContext.h"
 
 @interface SSManagedObject : NSManagedObject <NSCoding>
 
 // Accessing the Main Context
-+ (SSManagedObjectContext *)mainContext;
++ (NSManagedObjectContext *)mainContext;
 + (BOOL)hasMainContext;
 
 // Configuring the Persistent Store

@@ -7,9 +7,8 @@
 //
 
 #import "SSManagedObject.h"
-#import "SSManagedObjectContext.h"
 
-static SSManagedObjectContext *__managedObjectContext = nil;
+static NSManagedObjectContext *__managedObjectContext = nil;
 static NSManagedObjectModel *__managedObjectModel = nil;
 static NSURL *__persistentStoreURL = nil;
 static NSDictionary *__persistentStoreOptions = nil;
@@ -19,9 +18,9 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 #pragma mark - Managing Main Context
 
-+ (SSManagedObjectContext *)mainContext {
++ (NSManagedObjectContext *)mainContext {
 	if (!__managedObjectContext) {
-		__managedObjectContext = [[SSManagedObjectContext alloc] init];
+		__managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
 		__managedObjectContext.persistentStoreCoordinator = [self persistentStoreCoordinator];
 	}
 	return __managedObjectContext;
