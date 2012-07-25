@@ -8,6 +8,7 @@
 
 #import "SSFilteredResultsFilter.h"
 #import "SSFilteredResultsSection.h"
+#import <UIKit/UIKit.h>
 
 @implementation SSFilteredResultsFilter
 
