@@ -11,11 +11,14 @@
 
 @interface SSManagedObject : NSManagedObject <NSCoding>
 
-// Accessing the Main Context
+#pragma mark - Accessing the Main Context
+
 + (NSManagedObjectContext *)mainContext;
 + (BOOL)hasMainContext;
 
-// Configuring the Persistent Store
+
+#pragma mark - Configuring the Persistent Store
+
 + (NSPersistentStoreCoordinator *)persistentStoreCoordinator;
 + (NSDictionary *)persistentStoreOptions;
 + (void)setPersistentStoreOptions:(NSDictionary *)options;
@@ -24,27 +27,46 @@
 + (NSURL *)persistentStoreURL;
 + (void)setPersistentStoreURL:(NSURL *)url;
 
-// Getting Entity Information
+
+#pragma mark - Resetting the Presistent Store
+
++ (void)resetPersistentStore;
+
+/**
+ By default, this is NO. If you set this to YES, it will automatically delete the persistent store file and make a new
+ one if it fails to initialize (i.e. you failed to add a migration). This is super handy for development. You must set
+ this before calling `persistentStoreCoordinator` or anything that calls it like `mainContext`.
+ */
++ (void)setAutomaticallyResetsPersistentStore:(BOOL)automaticallyReset;
++ (BOOL)automaticallyResetsPersistentStore;
+
+
+#pragma mark -  Getting Entity Information
+
 + (NSString *)entityName;
 + (NSEntityDescription *)entity;
 + (NSEntityDescription *)entityWithContext:(NSManagedObjectContext *)context;
 + (NSArray *)defaultSortDescriptors;
 
-// Initializing
+
+#pragma mark -  Initializing
+
 - (id)initWithContext:(NSManagedObjectContext *)context;
 
-// Reflection
+
+#pragma mark -  Reflection
+
 - (NSArray *)attributeKeys;
 - (NSArray *)persistedAttributeKeys;
 - (NSArray *)transientAttributeKeys;
 - (NSArray *)relationshipKeys;
 - (NSRelationshipDescription *)relationshipForKeyPath:(NSString *)keyPath;
 
-// Manipulation
+
+#pragma mark -  Manipulation
+
 - (void)save;
 - (void)delete;
 
-// Resetting
-+ (void)resetPersistentStore;
 
 @end

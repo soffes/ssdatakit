@@ -12,6 +12,7 @@ static NSManagedObjectContext *__managedObjectContext = nil;
 static NSManagedObjectModel *__managedObjectModel = nil;
 static NSURL *__persistentStoreURL = nil;
 static NSDictionary *__persistentStoreOptions = nil;
+static BOOL __automaticallyResetsPersistentStore = NO;
 static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 @implementation SSManagedObject
@@ -43,11 +44,18 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 		NSError *error = nil;
 		NSDictionary *storeOptions = [self persistentStoreOptions];
 		[persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:url options:storeOptions error:&error];
+
 		if (error) {
-			NSLog(@"[SSDataKit] Failed to add persistent store: %@ %@", error, error.userInfo);
+			// Reset the persistent store
+			if (__automaticallyResetsPersistentStore && error.code == 134130) {
+				[[NSFileManager defaultManager] removeItemAtURL:url error:nil];
+				[persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:url options:storeOptions error:&error];
+			} else {
+				NSLog(@"[SSDataKit] Failed to add persistent store: %@ %@", error, error.userInfo);
+			}
 		}
 	});
-	
+
 	return persistentStoreCoordinator;
 }
 
@@ -118,6 +126,29 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 + (void)setPersistentStoreURL:(NSURL *)url {
 	__persistentStoreURL = url;
+}
+
+
+#pragma mark - Resetting the Presistent Store
+
++ (void)resetPersistentStore {
+	__managedObjectContext = nil;
+	NSURL *url = [self persistentStoreURL];
+	NSPersistentStoreCoordinator *psc = [SSManagedObject persistentStoreCoordinator];
+	if ([psc removePersistentStore:psc.persistentStores.lastObject error:nil]) {
+		[[NSFileManager defaultManager] removeItemAtURL:url error:nil];
+		[psc addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:url options:[SSManagedObject persistentStoreOptions] error:nil];
+	}
+}
+
+
++ (void)setAutomaticallyResetsPersistentStore:(BOOL)automaticallyReset {
+	__automaticallyResetsPersistentStore = automaticallyReset;
+}
+
+
++ (BOOL)automaticallyResetsPersistentStore {
+	return __automaticallyResetsPersistentStore;
 }
 
 
@@ -240,19 +271,6 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 - (void)delete {
 	[self.managedObjectContext deleteObject:self];
-}
-
-
-#pragma mark - Resetting
-
-+ (void)resetPersistentStore {
-	__managedObjectContext = nil;
-	NSURL *url = [self persistentStoreURL];	
-	NSPersistentStoreCoordinator *psc = [SSManagedObject persistentStoreCoordinator];
-	if ([psc removePersistentStore:psc.persistentStores.lastObject error:nil]) {
-		[[NSFileManager defaultManager] removeItemAtURL:url error:nil];
-		[psc addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:url options:[SSManagedObject persistentStoreOptions] error:nil];
-	}
 }
 
 
