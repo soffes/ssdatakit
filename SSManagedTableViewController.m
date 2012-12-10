@@ -78,6 +78,13 @@
 }
 
 
+#pragma mark - Configuration
+
+- (BOOL)useChangeAnimations {
+	return YES;
+}
+
+
 #pragma mark - Working with Cells
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
@@ -123,7 +130,7 @@
 #pragma mark - NSFetchedResultsControllerDelegate
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
-	if (self.ignoreChange) {
+	if (self.ignoreChange || ![self useChangeAnimations]) {
 		return;
 	}
     [self.tableView beginUpdates];
@@ -132,7 +139,7 @@
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
 		   atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
-	if (self.ignoreChange) {
+	if (self.ignoreChange || ![self useChangeAnimations]) {
 		return;
 	}
 	
@@ -155,7 +162,7 @@
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
 	   atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
 	  newIndexPath:(NSIndexPath *)newIndexPath {
-	if (self.ignoreChange) {
+	if (self.ignoreChange || ![self useChangeAnimations]) {
 		return;
 	}
 	
@@ -197,7 +204,12 @@
 	if (self.ignoreChange) {
 		return;
 	}
-    [self.tableView endUpdates];
+
+	if ([self useChangeAnimations]) {
+		[self.tableView endUpdates];
+	} else {
+		[self.tableView reloadData];
+	}
 }
 
 @end
