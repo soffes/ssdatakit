@@ -73,12 +73,12 @@
 
 + (id)objectWithDictionary:(NSDictionary *)dictionary context:(NSManagedObjectContext *)context {
 	// If there isn't a dictionary, we won't find the object. Return nil.
-	if (!dictionary) {
+	if (!dictionary || [dictionary isEqual:[NSNull null]]) {
 		return nil;
 	}
 	
 	// Extract the remoteID from the dictionary
-	NSNumber *remoteID = [dictionary objectForKey:@"id"];
+	NSNumber *remoteID = dictionary[@"id"];
 	
 	// If there isn't a remoteID, we won't find the object. Return nil.
 	if (!remoteID || remoteID.integerValue == 0) {
@@ -115,7 +115,7 @@
 	}
 	
 	// Extract the remoteID from the dictionary
-	NSNumber *remoteID = [dictionary objectForKey:@"id"];
+	NSNumber *remoteID = dictionary[@"id"];
 	
 	// If there isn't a remoteID, we won't find the object. Return nil.
 	if (!remoteID || remoteID.integerValue == 0) {
@@ -145,16 +145,25 @@
 
 - (void)unpackDictionary:(NSDictionary *)dictionary {
 	if (!self.isRemote) {
-		self.remoteID = [dictionary objectForKey:@"id"];
+		self.remoteID = dictionary[@"id"];
 	}
-	
-	self.createdAt = [[self class] parseDate:[dictionary objectForKey:@"created_at"]];
-	self.updatedAt = [[self class] parseDate:[dictionary objectForKey:@"updated_at"]];
+
+	if ([self respondsToSelector:@selector(setCreatedAt:)]) {
+		self.createdAt = [[self class] parseDate:dictionary[@"created_at"]];
+	}
+
+	if ([self respondsToSelector:@selector(setUpdatedAt:)]) {
+		self.updatedAt = [[self class] parseDate:dictionary[@"updated_at"]];
+	}
 }
 
 
 - (BOOL)shouldUnpackDictionary:(NSDictionary *)dictionary {
-	return self.updatedAt == nil || [self.updatedAt isEqualToDate:[[self class] parseDate:[dictionary objectForKey:@"updated_at"]]] == NO;
+	if (![self respondsToSelector:@selector(updatedAt)]) {
+		return YES;
+	}
+	
+	return self.updatedAt == nil || [self.updatedAt isEqualToDate:[[self class] parseDate:dictionary[@"updated_at"]]] == NO;
 }
 
 
