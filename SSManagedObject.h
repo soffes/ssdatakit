@@ -26,6 +26,8 @@
 + (void)setManagedObjectModel:(NSManagedObjectModel *)model;
 + (NSURL *)persistentStoreURL;
 + (void)setPersistentStoreURL:(NSURL *)url;
++ (NSString *)persistentStoreType;
++ (void)setPersistentStoreType:(NSString *)persistentStoreType;
 
 
 #pragma mark - Resetting the Presistent Store

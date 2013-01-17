@@ -11,6 +11,7 @@
 static NSManagedObjectContext *__managedObjectContext = nil;
 static NSManagedObjectModel *__managedObjectModel = nil;
 static NSURL *__persistentStoreURL = nil;
+static NSString *__persistentStoreType = nil;
 static NSDictionary *__persistentStoreOptions = nil;
 static BOOL __automaticallyResetsPersistentStore = NO;
 static NSString *const kURIRepresentationKey = @"URIRepresentation";
@@ -43,13 +44,13 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 		NSURL *url = [self persistentStoreURL];
 		NSError *error = nil;
 		NSDictionary *storeOptions = [self persistentStoreOptions];
-		[persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:url options:storeOptions error:&error];
+		[persistentStoreCoordinator addPersistentStoreWithType:[self persistentStoreType] configuration:nil URL:url options:storeOptions error:&error];
 
 		if (error) {
 			// Reset the persistent store
 			if (__automaticallyResetsPersistentStore && error.code == 134130) {
 				[[NSFileManager defaultManager] removeItemAtURL:url error:nil];
-				[persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:url options:storeOptions error:&error];
+				[persistentStoreCoordinator addPersistentStoreWithType:[self persistentStoreType] configuration:nil URL:url options:storeOptions error:&error];
 			} else {
 				NSLog(@"[SSDataKit] Failed to add persistent store: %@ %@", error, error.userInfo);
 			}
@@ -129,6 +130,16 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 }
 
 
++ (NSString *)persistentStoreType {
+	return __persistentStoreType ? __persistentStoreType : NSSQLiteStoreType;
+}
+
+
++ (void)setPersistentStoreType:(NSString *)persistentStoreType {
+	__persistentStoreType = persistentStoreType;
+}
+
+
 #pragma mark - Resetting the Presistent Store
 
 + (void)resetPersistentStore {
@@ -137,7 +148,7 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 	NSPersistentStoreCoordinator *psc = [SSManagedObject persistentStoreCoordinator];
 	if ([psc removePersistentStore:psc.persistentStores.lastObject error:nil]) {
 		[[NSFileManager defaultManager] removeItemAtURL:url error:nil];
-		[psc addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:url options:[SSManagedObject persistentStoreOptions] error:nil];
+		[psc addPersistentStoreWithType:[self persistentStoreType] configuration:nil URL:url options:[SSManagedObject persistentStoreOptions] error:nil];
 	}
 }
 
