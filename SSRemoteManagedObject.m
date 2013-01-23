@@ -44,7 +44,7 @@
 + (id)existingObjectWithRemoteID:(NSNumber *)remoteID context:(NSManagedObjectContext *)context {
 	// Default to the main context
 	if (!context) {
-		context = [self mainContext];
+		context = [self mainQueueContext];
 	}
 	
 	// Create the fetch request for the ID
@@ -87,7 +87,7 @@
 	
 	// Default to the main context
 	if (!context) {
-		context = [self mainContext];
+		context = [self mainQueueContext];
 	}
 	
 	// Find or create the object
@@ -124,7 +124,7 @@
 	
 	// Default to the main context
 	if (!context) {
-		context = [self mainContext];
+		context = [self mainQueueContext];
 	}
 	
 	// Lookup the object

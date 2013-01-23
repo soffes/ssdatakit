@@ -8,7 +8,8 @@
 
 #import "SSManagedObject.h"
 
-static NSManagedObjectContext *__managedObjectContext = nil;
+static NSManagedObjectContext *__privateQueueContext = nil;
+static NSManagedObjectContext *__mainQueueContext = nil;
 static NSManagedObjectModel *__managedObjectModel = nil;
 static NSURL *__persistentStoreURL = nil;
 static NSDictionary *__persistentStoreOptions = nil;
@@ -17,19 +18,67 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 @implementation SSManagedObject
 
-#pragma mark - Managing Main Context
+#pragma mark - Managing application contexts
+
++ (NSManagedObjectContext *)privateQueueContext {
+	if (!__privateQueueContext) {
+		__privateQueueContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+		[__privateQueueContext setPersistentStoreCoordinator:[self persistentStoreCoordinator]];
+	}
+	return __privateQueueContext;
+}
+
+
++ (BOOL)hasPrivateQueueContext {
+	return (__privateQueueContext != nil);
+}
+
+
++ (NSManagedObjectContext *)mainQueueContext {
+	if (!__mainQueueContext) {
+		__mainQueueContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+		[__mainQueueContext setParentContext:[self privateQueueContext]];
+		
+		// push changes up to parent
+		[[NSNotificationCenter defaultCenter]
+		 addObserverForName:NSManagedObjectContextDidSaveNotification
+		 object:__mainQueueContext
+		 queue:nil
+		 usingBlock:^(NSNotification *note) {
+			 NSManagedObjectContext *context = [self privateQueueContext];
+			 [context performBlock:^{
+				 [context save:nil];
+			 }];
+		 }];
+        
+        // pull changes from parent
+        [[NSNotificationCenter defaultCenter]
+         addObserverForName:NSManagedObjectContextDidSaveNotification
+         object:__privateQueueContext
+         queue:nil
+         usingBlock:^(NSNotification *note) {
+             NSManagedObjectContext *context = [self mainQueueContext];
+             [context performBlock:^{
+                 [context mergeChangesFromContextDidSaveNotification:note];
+             }];
+         }];
+	}
+	return __mainQueueContext;
+}
+
+
++ (BOOL)hasMainQueueContext {
+	return (__mainQueueContext != nil);
+}
+
 
 + (NSManagedObjectContext *)mainContext {
-	if (!__managedObjectContext) {
-		__managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
-		__managedObjectContext.persistentStoreCoordinator = [self persistentStoreCoordinator];
-	}
-	return __managedObjectContext;
+    return [self mainQueueContext];
 }
 
 
 + (BOOL)hasMainContext {
-	return __managedObjectContext != nil;
+    return [self hasMainQueueContext];
 }
 
 
@@ -37,14 +86,14 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 	static NSPersistentStoreCoordinator *persistentStoreCoordinator = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		NSManagedObjectModel *model = [self managedObjectModel];		
+		NSManagedObjectModel *model = [self managedObjectModel];
 		persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
 		
 		NSURL *url = [self persistentStoreURL];
 		NSError *error = nil;
 		NSDictionary *storeOptions = [self persistentStoreOptions];
 		[persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:url options:storeOptions error:&error];
-
+        
 		if (error) {
 			// Reset the persistent store
 			if (__automaticallyResetsPersistentStore && error.code == 134130) {
@@ -55,7 +104,7 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 			}
 		}
 	});
-
+    
 	return persistentStoreCoordinator;
 }
 
@@ -80,13 +129,13 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 	if (!__managedObjectModel) {
 		// Default model
 		NSManagedObjectModel *model = [NSManagedObjectModel mergedModelFromBundles:nil];
-
+        
 		// Ensure a model is loaded
 		if (!model) {
 			[[NSException exceptionWithName:@"SSManagedObjectMissingModel" reason:@"You need to provide a managed model." userInfo:nil] raise];
 			return nil;
 		}
-
+        
 		[self setManagedObjectModel:model];
 	}
 	return __managedObjectModel;
@@ -110,7 +159,7 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 		NSFileManager *fileManager = [NSFileManager defaultManager];
 		NSURL *applicationSupportURL = [[fileManager URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask] lastObject];
 		applicationSupportURL = [applicationSupportURL URLByAppendingPathComponent:applicationName];
-
+        
 		NSDictionary *properties = [applicationSupportURL resourceValuesForKeys:[NSArray arrayWithObject:NSURLIsDirectoryKey] error:nil];
 		if (!properties) {
 			[fileManager createDirectoryAtPath:[applicationSupportURL path] withIntermediateDirectories:YES attributes:nil error:nil];
@@ -132,7 +181,8 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 #pragma mark - Resetting the Presistent Store
 
 + (void)resetPersistentStore {
-	__managedObjectContext = nil;
+	__privateQueueContext = nil;
+	__mainQueueContext = nil;
 	NSURL *url = [self persistentStoreURL];
 	NSPersistentStoreCoordinator *psc = [SSManagedObject persistentStoreCoordinator];
 	if ([psc removePersistentStore:psc.persistentStores.lastObject error:nil]) {
@@ -166,7 +216,7 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 + (NSEntityDescription *)entityWithContext:(NSManagedObjectContext *)context {
 	if (!context) {
-		context = [self mainContext];
+		context = [self mainQueueContext];
 	}
 	
 	return [NSEntityDescription entityForName:[self entityName] inManagedObjectContext:context];
@@ -190,7 +240,7 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 - (id)initWithContext:(NSManagedObjectContext *)context {
 	if (!context) {
-		context = [[self class] mainContext];
+		context = [[self class] mainQueueContext];
 	}
 	
 	NSEntityDescription *entity = [[self class] entityWithContext:context];
@@ -277,7 +327,7 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 #pragma mark - NSCoding
 
 - (id)initWithCoder:(NSCoder *)decoder {
-	NSManagedObjectContext *context = [[self class] mainContext];
+	NSManagedObjectContext *context = [[self class] mainQueueContext];
 	NSPersistentStoreCoordinator *psc = [[self class] persistentStoreCoordinator];
 	self = (SSManagedObject *)[context objectWithID:[psc managedObjectIDForURIRepresentation:(NSURL *)[decoder decodeObjectForKey:kURIRepresentationKey]]];
 	return self;
@@ -285,6 +335,9 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 
 - (void)encodeWithCoder:(NSCoder *)encoder {
+    if ([[self objectID] isTemporaryID]) {
+        [[self managedObjectContext] obtainPermanentIDsForObjects:@[ self ] error:nil];
+    }
     [encoder encodeObject:[[self objectID] URIRepresentation] forKey:kURIRepresentationKey];
 }
 
