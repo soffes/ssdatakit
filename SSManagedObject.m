@@ -265,6 +265,16 @@ id __mainQueueContextObserver = nil;
 }
 
 
+#pragma mark - Object IDs
+
+- (NSManagedObjectID *)permanentObjectID {
+	if ([[self objectID] isTemporaryID]) {
+		[[self managedObjectContext] obtainPermanentIDsForObjects:@[ self ] error:nil];
+	}
+	return [self objectID];
+}
+
+
 #pragma mark - Reflection
 
 - (NSArray *)attributeKeys {
@@ -351,10 +361,7 @@ id __mainQueueContextObserver = nil;
 
 
 - (void)encodeWithCoder:(NSCoder *)encoder {
-	if ([[self objectID] isTemporaryID]) {
-		[[self managedObjectContext] obtainPermanentIDsForObjects:@[ self ] error:nil];
-	}
-	[encoder encodeObject:[[self objectID] URIRepresentation] forKey:kURIRepresentationKey];
+	[encoder encodeObject:[[self permanentObjectID] URIRepresentation] forKey:kURIRepresentationKey];
 }
 
 

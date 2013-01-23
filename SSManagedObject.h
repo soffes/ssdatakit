@@ -77,6 +77,11 @@ Changes saved here are automatically reflected in the `privateQueueContext`.
 - (id)initWithContext:(NSManagedObjectContext *)context;
 
 
+#pragma mark - Object ID resolution
+
+- (NSManagedObjectID *)permanentObjectID;
+
+
 #pragma mark -  Reflection
 
 - (NSArray *)attributeKeys;
