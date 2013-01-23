@@ -92,7 +92,7 @@
 
 
 - (NSManagedObjectContext *)managedObjectContext {
-	return [self.entityClass mainContext];
+    return [[self entityClass] mainQueueContext];
 }
 
 
