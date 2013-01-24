@@ -44,7 +44,7 @@ id __mainQueueContextObserver = nil;
 		[__mainQueueContext setParentContext:[self privateQueueContext]];
 		
 		// push changes up to parent
-		__privateQueueContextObserver = [[NSNotificationCenter defaultCenter]
+		__mainQueueContextObserver = [[NSNotificationCenter defaultCenter]
 		 addObserverForName:NSManagedObjectContextDidSaveNotification
 		 object:__mainQueueContext
 		 queue:nil
@@ -56,7 +56,7 @@ id __mainQueueContextObserver = nil;
 		 }];
 		
 		// pull changes from parent
-		__mainQueueContextObserver = [[NSNotificationCenter defaultCenter]
+		__privateQueueContextObserver = [[NSNotificationCenter defaultCenter]
 		 addObserverForName:NSManagedObjectContextDidSaveNotification
 		 object:__privateQueueContext
 		 queue:nil
