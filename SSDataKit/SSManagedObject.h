@@ -16,9 +16,11 @@
 /**
  Created as the "root" managed object context. This context has no parent
  and instead has the `persistentStoreCoordinator` set. Use this to perform
- any background processing in your Core Data stack.
+ any background processing in your Core Data stack. Make sure to pull data into
+ descendant contexts if you save directly here.
  
- Changes saved here are automatically reflected in the `mainQueueContext`.
+ Changes saved to any direct descendants of this context are automatically
+ pulled up and saved to the persistent store.
  */
 + (NSManagedObjectContext *)privateQueueContext;
 + (BOOL)hasPrivateQueueContext;

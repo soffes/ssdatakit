@@ -8,6 +8,7 @@
 
 #import "SSManagedObject.h"
 
+static id __contextSaveObserver = nil;
 static NSManagedObjectContext *__privateQueueContext = nil;
 static NSManagedObjectContext *__mainQueueContext = nil;
 static NSManagedObjectModel *__managedObjectModel = nil;
@@ -15,10 +16,6 @@ static NSURL *__persistentStoreURL = nil;
 static NSDictionary *__persistentStoreOptions = nil;
 static BOOL __automaticallyResetsPersistentStore = NO;
 static NSString *const kURIRepresentationKey = @"URIRepresentation";
-
-// notification observers
-id __privateQueueContextObserver = nil;
-id __mainQueueContextObserver = nil;
 
 @implementation SSManagedObject
 
@@ -28,13 +25,25 @@ id __mainQueueContextObserver = nil;
 	if (!__privateQueueContext) {
 		__privateQueueContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
 		[__privateQueueContext setPersistentStoreCoordinator:[self persistentStoreCoordinator]];
+        __contextSaveObserver = [[NSNotificationCenter defaultCenter]
+         addObserverForName:NSManagedObjectContextDidSaveNotification
+         object:nil
+         queue:nil
+         usingBlock:^(NSNotification *note) {
+             NSManagedObjectContext *savingContext = [note object];
+             if ([savingContext parentContext] == [self privateQueueContext]) {
+                 [__privateQueueContext performBlock:^{
+                     [__privateQueueContext save:nil];
+                 }];
+             }
+         }];
 	}
 	return __privateQueueContext;
 }
 
 
 + (BOOL)hasPrivateQueueContext {
-	return (__privateQueueContext != nil);
+    return (__privateQueueContext != nil);
 }
 
 
@@ -42,30 +51,6 @@ id __mainQueueContextObserver = nil;
 	if (!__mainQueueContext) {
 		__mainQueueContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
 		[__mainQueueContext setParentContext:[self privateQueueContext]];
-		
-		// push changes up to parent
-		__mainQueueContextObserver = [[NSNotificationCenter defaultCenter]
-		 addObserverForName:NSManagedObjectContextDidSaveNotification
-		 object:__mainQueueContext
-		 queue:nil
-		 usingBlock:^(NSNotification *note) {
-			 NSManagedObjectContext *context = [self privateQueueContext];
-			 [context performBlock:^{
-				 [context save:nil];
-			 }];
-		 }];
-		
-		// pull changes from parent
-		__privateQueueContextObserver = [[NSNotificationCenter defaultCenter]
-		 addObserverForName:NSManagedObjectContextDidSaveNotification
-		 object:__privateQueueContext
-		 queue:nil
-		 usingBlock:^(NSNotification *note) {
-			 NSManagedObjectContext *context = [self mainQueueContext];
-			 [context performBlock:^{
-				 [context mergeChangesFromContextDidSaveNotification:note];
-			 }];
-		 }];
 	}
 	return __mainQueueContext;
 }
@@ -187,15 +172,7 @@ id __mainQueueContextObserver = nil;
 + (void)resetPersistentStore {
 	
 	// unwind old contexts
-	NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
-	[center
-	 removeObserver:__privateQueueContextObserver
-	 name:NSManagedObjectContextDidSaveNotification
-	 object:__privateQueueContext];
-	[center
-	 removeObserver:__mainQueueContextObserver
-	 name:NSManagedObjectContextDidSaveNotification
-	 object:__mainQueueContext];
+	[[NSNotificationCenter defaultCenter] removeObserver:__contextSaveObserver];
 	__privateQueueContext = nil;
 	__mainQueueContext = nil;
 
