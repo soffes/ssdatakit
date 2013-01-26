@@ -15,8 +15,12 @@
 #import "NSManagedObjectContext+SSDataKitAdditions.h"
 
 #if TARGET_OS_IPHONE
-	#import "SSManagedViewController.h"
-	#import "SSManagedTableViewController.h"
+    #import "SSManagedViewController.h"
+    #import "SSManagedTableViewController.h"
+
+    #ifdef __IPHONE_6_0
+        #import "SSManagedCollectionViewController.h"
+    #endif
 
 	//  NOTE: This class is a work in progress and may not be production ready.
 	#import "SSFilterableFetchedResultsController.h"
