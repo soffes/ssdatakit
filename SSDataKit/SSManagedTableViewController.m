@@ -3,7 +3,7 @@
 //  SSDataKit
 //
 //  Created by Sam Soffes on 4/7/12.
-//  Copyright (c) 2012 Sam Soffes. All rights reserved.
+//  Copyright (c) 2012-2013 Sam Soffes. All rights reserved.
 //
 
 #import "SSManagedTableViewController.h"
@@ -33,7 +33,7 @@
 
 - (void)loadView {
 	[super loadView];
-	
+
 	// Add the table view as a subview for increased flexibility
 	_tableView.frame = self.view.bounds;
 	[self.view addSubview:_tableView];
@@ -42,10 +42,10 @@
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-	
+
 	// TODO: Only reload if data is empty
 	[self.tableView reloadData];
-	
+
 	if (_clearsSelectionOnViewWillAppear) {
 		[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:animated];
 	}
@@ -111,7 +111,7 @@
 }
 
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section { 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
     return [sectionInfo name];
 }
@@ -142,14 +142,14 @@
 	if (self.ignoreChange || ![self useChangeAnimations]) {
 		return;
 	}
-	
+
     switch(type) {
         case NSFetchedResultsChangeInsert: {
             [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex]
 						  withRowAnimation:UITableViewRowAnimationFade];
             break;
 		}
-			
+
         case NSFetchedResultsChangeDelete: {
             [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex]
 						  withRowAnimation:UITableViewRowAnimationFade];
@@ -165,29 +165,29 @@
 	if (self.ignoreChange || ![self useChangeAnimations]) {
 		return;
 	}
-	
+
     UITableView *tableView = self.tableView;
 	indexPath = [self viewIndexPathForFetchedIndexPath:indexPath];
 	newIndexPath = [self viewIndexPathForFetchedIndexPath:newIndexPath];
-	
+
     switch(type) {
         case NSFetchedResultsChangeInsert: {
             [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath]
 							 withRowAnimation:UITableViewRowAnimationFade];
             break;
 		}
-			
+
         case NSFetchedResultsChangeDelete: {
             [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
 							 withRowAnimation:UITableViewRowAnimationFade];
             break;
 		}
-			
+
         case NSFetchedResultsChangeUpdate: {
             [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
             break;
 		}
-			
+
         case NSFetchedResultsChangeMove: {
             [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
 							 withRowAnimation:UITableViewRowAnimationFade];

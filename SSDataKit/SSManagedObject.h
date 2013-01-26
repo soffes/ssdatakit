@@ -3,7 +3,7 @@
 //  SSDataKit
 //
 //  Created by Sam Soffes on 10/23/11.
-//  Copyright (c) 2011 Sam Soffes. All rights reserved.
+//  Copyright (c) 2011-2013 Sam Soffes. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -18,7 +18,7 @@
  and instead has the `persistentStoreCoordinator` set. Use this to perform
  any background processing in your Core Data stack. Make sure to pull data into
  descendant contexts if you save directly here.
- 
+
  Changes saved to any direct descendants of this context are automatically
  pulled up and saved to the persistent store.
  */

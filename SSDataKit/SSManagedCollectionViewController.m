@@ -1,9 +1,9 @@
 //
 //  SSManagedCollectionViewController.m
-//  Tumblr
+//  SSDataKit
 //
 //  Created by Robert Dougan on 12/19/12.
-//  Copyright (c) 2012 Robert Dougan. All rights reserved.
+//  Copyright (c) 2012-2013 Sam Soffes. All rights reserved.
 //
 
 #import "SSManagedCollectionViewController.h"
@@ -30,10 +30,10 @@
 
 - (void)loadView {
 	[super loadView];
-    
+
     _objectChanges = [NSMutableArray array];
     _sectionChanges = [NSMutableArray array];
-	
+
 	// Add the collection view as a subview for increased flexibility
 	_collectionView.frame = self.view.bounds;
 	[self.view addSubview:_collectionView];
@@ -42,7 +42,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-	
+
 	// TODO: Only reload if data is empty
 	[self.collectionView reloadData];
 }
@@ -100,9 +100,9 @@
 	if (self.ignoreChange) {
 		return;
 	}
-	
+
     NSMutableDictionary *change = [NSMutableDictionary new];
-    
+
     switch(type) {
         case NSFetchedResultsChangeInsert:
             change[@(type)] = @[@(sectionIndex)];
@@ -111,7 +111,7 @@
             change[@(type)] = @[@(sectionIndex)];
             break;
     }
-    
+
     [_sectionChanges addObject:change];
 }
 
@@ -122,7 +122,7 @@
 	if (self.ignoreChange) {
 		return;
 	}
-	
+
     NSMutableDictionary *change = [NSMutableDictionary new];
     switch(type)
     {
@@ -147,11 +147,11 @@
     if ([_sectionChanges count] > 0)
     {
         [self.collectionView performBatchUpdates:^{
-            
+
             for (NSDictionary *change in _sectionChanges)
             {
                 [change enumerateKeysAndObjectsUsingBlock:^(NSNumber *key, id obj, BOOL *stop) {
-                    
+
                     NSFetchedResultsChangeType type = [key unsignedIntegerValue];
                     switch (type)
                     {
@@ -169,15 +169,15 @@
             }
         } completion:nil];
     }
-    
+
     if ([_objectChanges count] > 0 && [_sectionChanges count] == 0)
     {
         [self.collectionView performBatchUpdates:^{
-            
+
             for (NSDictionary *change in _objectChanges)
             {
                 [change enumerateKeysAndObjectsUsingBlock:^(NSNumber *key, id obj, BOOL *stop) {
-                    
+
                     NSFetchedResultsChangeType type = [key unsignedIntegerValue];
                     switch (type)
                     {
@@ -198,7 +198,7 @@
             }
         } completion:nil];
     }
-    
+
     [_sectionChanges removeAllObjects];
     [_objectChanges removeAllObjects];
 }

@@ -3,7 +3,7 @@
 //  SSDataKit
 //
 //  Created by Sam Soffes on 10/23/11.
-//  Copyright (c) 2011 Sam Soffes. All rights reserved.
+//  Copyright (c) 2011-2013 Sam Soffes. All rights reserved.
 //
 
 #import "SSManagedObject.h"
@@ -77,12 +77,12 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 	dispatch_once(&onceToken, ^{
 		NSManagedObjectModel *model = [self managedObjectModel];
 		persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
-		
+
 		NSURL *url = [self persistentStoreURL];
 		NSError *error = nil;
 		NSDictionary *storeOptions = [self persistentStoreOptions];
 		[persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:url options:storeOptions error:&error];
-		
+
 		if (error) {
 			// Reset the persistent store
 			if (__automaticallyResetsPersistentStore && error.code == 134130) {
@@ -93,7 +93,7 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 			}
 		}
 	});
-	
+
 	return persistentStoreCoordinator;
 }
 
@@ -118,13 +118,13 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 	if (!__managedObjectModel) {
 		// Default model
 		NSManagedObjectModel *model = [NSManagedObjectModel mergedModelFromBundles:nil];
-		
+
 		// Ensure a model is loaded
 		if (!model) {
 			[[NSException exceptionWithName:@"SSManagedObjectMissingModel" reason:@"You need to provide a managed model." userInfo:nil] raise];
 			return nil;
 		}
-		
+
 		[self setManagedObjectModel:model];
 	}
 	return __managedObjectModel;
@@ -148,12 +148,12 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 		NSFileManager *fileManager = [NSFileManager defaultManager];
 		NSURL *applicationSupportURL = [[fileManager URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask] lastObject];
 		applicationSupportURL = [applicationSupportURL URLByAppendingPathComponent:applicationName];
-		
+
 		NSDictionary *properties = [applicationSupportURL resourceValuesForKeys:[NSArray arrayWithObject:NSURLIsDirectoryKey] error:nil];
 		if (!properties) {
 			[fileManager createDirectoryAtPath:[applicationSupportURL path] withIntermediateDirectories:YES attributes:nil error:nil];
 		}
-		
+
 		NSURL *url = [applicationSupportURL URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqlite", applicationName]];
 #endif
 		[self setPersistentStoreURL:url];
@@ -170,7 +170,7 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 #pragma mark - Resetting the Presistent Store
 
 + (void)resetPersistentStore {
-	
+
 	// unwind old contexts
 	[[NSNotificationCenter defaultCenter] removeObserver:__contextSaveObserver];
 	__privateQueueContext = nil;
@@ -211,7 +211,7 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 	if (!context) {
 		context = [self mainQueueContext];
 	}
-	
+
 	return [NSEntityDescription entityForName:[self entityName] inManagedObjectContext:context];
 }
 
@@ -235,9 +235,9 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 	if (!context) {
 		context = [[self class] mainQueueContext];
 	}
-	
+
 	NSEntityDescription *entity = [[self class] entityWithContext:context];
-	
+
 	return (self = [self initWithEntity:entity insertIntoManagedObjectContext:context]);
 }
 
@@ -267,7 +267,7 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 			[keys addObject:key];
 		}
 	}
-	
+
 	return keys;
 }
 
@@ -280,7 +280,7 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 			[keys addObject:key];
 		}
 	}
-	
+
 	return keys;
 }
 
@@ -293,24 +293,24 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 - (NSRelationshipDescription *)relationshipForKeyPath:(NSString *)keyPath {
 	// Find releationship
 	NSArray *keys = [keyPath componentsSeparatedByString:@"."];
-	
+
 	// We need keys to find the relationship
 	if ([keys count] == 0) {
 		return nil;
 	}
-	
+
 	NSEntityDescription *rootEntity = [[self class] entityWithContext:[self managedObjectContext]];
 	NSRelationshipDescription *relationship = nil;
-	
+
 	// Loop through keys and find the relationship
 	for (NSString *key in keys) {
 		if (relationship) {
 			rootEntity = [relationship destinationEntity];
 		}
-		
+
 		relationship = [[rootEntity relationshipsByName] objectForKey:key];
 	}
-	
+
 	return relationship;
 }
 

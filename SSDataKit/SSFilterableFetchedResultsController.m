@@ -3,7 +3,7 @@
 //  SSDataKit
 //
 //  Created by Sam Soffes on 4/30/12.
-//  Copyright (c) 2012 Sam Soffes. All rights reserved.
+//  Copyright (c) 2012-2013 Sam Soffes. All rights reserved.
 //
 
 #import "SSFilterableFetchedResultsController.h"
@@ -35,13 +35,13 @@
     if (!self) {
         return nil;
     }
-	
+
 	NSFetchedResultsController *fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:context sectionNameKeyPath:sectionNameKeyPath cacheName:name];
 	fetchedResultsController.delegate = self;
 	self.fetchedResultsController = fetchedResultsController;
-	
+
 	self.filters = [NSMutableDictionary dictionary];
-	
+
 	return self;
 }
 
@@ -55,10 +55,10 @@
 
 - (void)addFilterPredicate:(SSFilterableFetchedResultsFilterPredicate)predicate forKey:(NSString *)key {
 	SSFilteredResultsFilter *f = [[SSFilteredResultsFilter alloc] init];
-	
+
 	f.predicate = predicate;
 	f.sections = [NSMutableArray array];
-	
+
 	[self.filters setObject:f forKey:key];
 }
 
@@ -66,11 +66,11 @@
 - (void)setActiveFilterByKey:(NSString *)key {
 	SSFilteredResultsFilter *currentFilter = self.currentFilter;
 	SSFilteredResultsFilter *newFilter = nil;
-	
+
 	if (key) {
 		newFilter = [self.filters objectForKey:key];
 	}
-	
+
 	if (![newFilter isEqual:currentFilter]) {
 		self.currentFilter = newFilter;
 		[self _updateObjectsForCurrentFilter:currentFilter newFilter:newFilter];
@@ -92,16 +92,16 @@
 	if ([(NSObject *)self.delegate respondsToSelector:@selector(controllerWillChangeContent:)]) {
 		[self.delegate controllerWillChangeContent:self.fetchedResultsController];
 	}
-	
+
 	if (!newFilter && currentFilter) {
 		//Update Back To "Show All / Do not filter at all"
-		
+
 		for(int i = 0; i < self.fetchedResultsController.sections.count; i++) {
 			id<NSFetchedResultsSectionInfo> section = (id<NSFetchedResultsSectionInfo>)[self.fetchedResultsController.sections objectAtIndex:i];
-			
+
 			for(int j = 0; j < section.objects.count; j++) {
 				NSObject *o = [section.objects objectAtIndex:j];
-				
+
 				if (!currentFilter.predicate(o)) {
 					if ([(NSObject *)self.delegate respondsToSelector:@selector(controller:didChangeObject:atIndexPath:forChangeType:newIndexPath:)]) {
 						[self.delegate controller:self.fetchedResultsController
@@ -115,19 +115,19 @@
 		}
 	} else if (newFilter && !currentFilter) {
 		//Going From showing "All" to showing a filter
-		
+
 		[newFilter.sections removeAllObjects];
-		
+
 		for(int i = 0; i < self.fetchedResultsController.sections.count; i++) {
 			id<NSFetchedResultsSectionInfo> section = (id<NSFetchedResultsSectionInfo>)[self.fetchedResultsController.sections objectAtIndex:i];
-			
+
 			SSFilteredResultsSection *filteredSection = [[SSFilteredResultsSection alloc] init];
 			filteredSection.internalName = section.name;
 			filteredSection.internalIndexTitle = section.indexTitle;
-			
+
 			for(int j = 0; j < section.objects.count; j++) {
 				NSObject *o = [section.objects objectAtIndex:j];
-				
+
 				if (!newFilter.predicate(o)) {
 					if ([(NSObject *)self.delegate respondsToSelector:@selector(controller:didChangeObject:atIndexPath:forChangeType:newIndexPath:)]) {
 						[self.delegate controller:self.fetchedResultsController
@@ -140,18 +140,18 @@
 					[filteredSection addObject:o];
 				}
 			}
-			
+
 			[newFilter.sections addObject:filteredSection];
 		}
 	} else if (newFilter && currentFilter) {
 		//Going from one filter to another filter
-		
+
 		for(int i = 0; i < currentFilter.sections.count; i++) {
 			SSFilteredResultsSection *section = (SSFilteredResultsSection *)[currentFilter.sections objectAtIndex:i];
-			
+
 			for(int j = 0; j < section.objects.count; j++) {
 				NSObject *o = [section.objects objectAtIndex:j];
-				
+
 				if ([(NSObject *)self.delegate respondsToSelector:@selector(controller:didChangeObject:atIndexPath:forChangeType:newIndexPath:)]) {
 					[self.delegate controller:self.fetchedResultsController
 							  didChangeObject:o
@@ -161,22 +161,22 @@
 				}
 			}
 		}
-		
+
 		[newFilter.sections removeAllObjects];
-		
+
 		for(int i = 0; i < self.fetchedResultsController.sections.count; i++) {
 			id<NSFetchedResultsSectionInfo> section = (id<NSFetchedResultsSectionInfo>)[self.fetchedResultsController.sections objectAtIndex:i];
-			
+
 			SSFilteredResultsSection *filteredSection = [[SSFilteredResultsSection alloc] init];
 			filteredSection.internalName = section.name;
 			filteredSection.internalIndexTitle = section.indexTitle;
-			
+
 			for(int j = 0; j < section.objects.count; j++) {
 				NSObject *o = [section.objects objectAtIndex:j];
-				
+
 				if (newFilter.predicate(o)) {
 					[filteredSection addObject:o];
-					
+
 					if ([(NSObject *)self.delegate respondsToSelector:@selector(controller:didChangeObject:atIndexPath:forChangeType:newIndexPath:)]) {
 						[self.delegate controller:self.fetchedResultsController
 								  didChangeObject:o
@@ -186,11 +186,11 @@
 					}
 				}
 			}
-			
+
 			[newFilter.sections addObject:filteredSection];
 		}
 	}
-	
+
 	if ([(NSObject *)self.delegate respondsToSelector:@selector(controllerDidChangeContent:)]) {
 		[self.delegate controllerDidChangeContent:self.fetchedResultsController];
 	}
@@ -206,21 +206,21 @@
 
 - (NSArray *)fetchedObjects {
 	NSMutableArray *arr = [NSMutableArray array];
-	
+
 	if (self.currentFilter == nil) {
 		for(int i = 0; i < self.fetchedResultsController.sections.count; i++) {
 			id<NSFetchedResultsSectionInfo> section = (id<NSFetchedResultsSectionInfo>)[self.fetchedResultsController.sections objectAtIndex:i];
-			
+
 			[arr addObjectsFromArray:section.objects];
 		}
 	} else {
 		for(int i = 0; i < self.currentFilter.sections.count; i++) {
 			SSFilteredResultsSection *section = (SSFilteredResultsSection *)[self.currentFilter.sections objectAtIndex:i];
-			
+
 			[arr addObjectsFromArray:section.objects];
-		}		
+		}
 	}
-	
+
 	return arr;
 }
 
@@ -238,7 +238,7 @@
 	if (!indexPath) {
 		return nil;
 	}
-	
+
 	if (!self.currentFilter) {
 		return [self.fetchedResultsController objectAtIndexPath:indexPath];
 	} else {
@@ -303,7 +303,7 @@
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
 	if ([(NSObject *)self.delegate respondsToSelector:@selector(controllerWillChangeContent:)]) {
-		[self.delegate controllerWillChangeContent:controller];		
+		[self.delegate controllerWillChangeContent:controller];
 	}
 }
 

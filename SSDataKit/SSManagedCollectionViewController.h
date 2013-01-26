@@ -3,12 +3,9 @@
 //  SSDataKit
 //
 //  Created by Robert Dougan on 12/19/12.
-//  Copyright (c) 2012 Robert Dougan. All rights reserved.
+//  Copyright (c) 2012-2013 Sam Soffes. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import <CoreData/CoreData.h>
-#import <UIKit/UIKit.h>
 #import "SSManagedViewController.h"
 
 @interface SSManagedCollectionViewController : SSManagedViewController <UICollectionViewDataSource, UICollectionViewDelegate>

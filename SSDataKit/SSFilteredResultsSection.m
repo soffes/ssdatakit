@@ -1,9 +1,9 @@
 //
 //  SSFilteredResultsSection.m
-//  Cheddar
+//  SSDataKit
 //
 //  Created by Sam Soffes on 4/30/12.
-//  Copyright (c) 2012 Sam Soffes. All rights reserved.
+//  Copyright (c) 2012-2013 Sam Soffes. All rights reserved.
 //
 
 #import "SSFilteredResultsSection.h"
@@ -19,7 +19,7 @@
 - (id)init {
     if ((self = [super init])) {
 		_objects = [[NSMutableArray alloc] init];
-	}	
+	}
 	return self;
 }
 
