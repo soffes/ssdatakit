@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
   s.homepage     = "https://github.com/soffes/ssdatakit"
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
   s.author       = { "Sam Soffes" => "sam@soff.es" }
-  s.source       = { :git => "https://github.com/soffes/ssdatakit.git", :commit => '70b0809a00' }
+  s.source       = { :git => "https://github.com/rdougan/ssdatakit.git", :commit => '70b0809a00' }
   s.platform     = :ios
   s.source_files = 'SSDataKit/*.{h,m}'
   s.framework  = 'CoreData'
