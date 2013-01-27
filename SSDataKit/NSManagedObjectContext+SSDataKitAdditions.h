@@ -3,7 +3,7 @@
 //  SSDataKit
 //
 //  Created by Sam Soffes on 1/25/12.
-//  Copyright (c) 2012 Sam Soffes. All rights reserved.
+//  Copyright (c) 2012-2013 Sam Soffes. All rights reserved.
 //
 
 #import <CoreData/CoreData.h>

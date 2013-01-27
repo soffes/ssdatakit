@@ -3,7 +3,7 @@
 //  SSDataKit
 //
 //  Created by Sam Soffes on 4/7/12.
-//  Copyright (c) 2012 Sam Soffes. All rights reserved.
+//  Copyright (c) 2012-2013 Sam Soffes. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -36,7 +36,7 @@
  Find an existing object with a given remote ID. The class' entity is used in the find. Therefore, this should only be
  called on a subclass. The object will be created if it is not found. If a context is not specified, the `mainContext`
  will be used.
- 
+
  The dictionary will be unpacked if `shouldUnpackDictionary:` returns `YES`.
  */
 + (id)objectWithDictionary:(NSDictionary *)dictionary;
@@ -46,7 +46,7 @@
  Find an existing object with a given remote ID. The class' entity is used in the find. Therefore, this should only be
  called on a subclass. `nil` is returned if the object is not found. If a context is not specified, the `mainContext`
  will be used.
- 
+
  The dictionary will be unpacked if `shouldUnpackDictionary:` returns `YES` and there is an object with the given ID.
  */
 + (id)existingObjectWithDictionary:(NSDictionary *)dictionary;
