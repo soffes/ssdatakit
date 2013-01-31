@@ -208,7 +208,7 @@
 
 		// Timezone
 		else if (len == 25 && str[22] == ':') {
-			strncpy(newStr, str, 22);    
+			strncpy(newStr, str, 22);
 			strncpy(newStr + 22, str + 23, 2);
 		}
 
