@@ -3,12 +3,9 @@
 //  SSDataKit
 //
 //  Created by Sam Soffes on 4/7/12.
-//  Copyright (c) 2012 Sam Soffes. All rights reserved.
+//  Copyright (c) 2012-2013 Sam Soffes. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import <CoreData/CoreData.h>
-#import <UIKit/UIKit.h>
 #import "SSManagedViewController.h"
 
 @interface SSManagedTableViewController : SSManagedViewController <UITableViewDataSource, UITableViewDelegate>
@@ -18,5 +15,6 @@
 
 - (id)initWithStyle:(UITableViewStyle)style;
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
+- (BOOL)useChangeAnimations;
 
 @end

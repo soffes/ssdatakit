@@ -3,9 +3,7 @@
 //  SSDataKit
 //
 //  Created by Sam Soffes on 4/30/12.
-//  Copyright (c) 2012 Sam Soffes. All rights reserved.
-//
-//  NOTE: This class is a work in progress and may not be production ready.
+//  Copyright (c) 2012-2013 Sam Soffes. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
