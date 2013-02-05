@@ -47,8 +47,10 @@ Changes saved here are automatically reflected in the `privateQueueContext`.
 /**
  Helpers for handling default store configuration parameters. Override these
  to return other default settings, or call
- `setPersistentStoreOptions:type:URL:forConfiguration:` passing `nil` for
- `configuration`.
+ `setPersistentStoreOptions:type:URL:forConfiguration:` passing nil for
+ configuration.
+ 
+ The provided implementations are best suited for SQLite store types.
  */
 + (NSURL *)defaultPersistentStoreURL;
 + (NSDictionary *)defaultPersistentStoreOptions;
@@ -56,14 +58,23 @@ Changes saved here are automatically reflected in the `privateQueueContext`.
 
 /**
  Set the options, type, and location for the store with the given configuration.
- All of these parameters mirror those seen on `+ [NSPersistentStoreCoordinator
- addPersistentStoreWithType:configuration:URL:options:error:&error]`. The
- only required paramter here is `type`.
+ The behavior of this method and its parameters mirror those seen on 
+ `+ [NSPersistentStoreCoordinator addPersistentStoreWithType:configuration:URL:options:error:&error]`.
+ 
+ The only required paramter here is type. If configuration is nil, no other
+ configurations may be specified. Once a non-nil configuration is specified,
+ the default nil configuration is removed.
  */
 + (void)setPersistentStoreOptions:(NSDictionary *)options
 							 type:(NSString *)type
 							  URL:(NSURL *)URL
 				 forConfiguration:(NSString *)configuration;
+
+/**
+ Removes the store definition with the given configuration. Pass nil to remove
+ the default store definition. Note that this does not unload the given store.
+ */
++ (void)removeStoreDefinitionForConfiguration:(NSString *)configuration;
 
 /**
  Set and get the managed object model. Loaded when creating the persistent

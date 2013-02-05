@@ -166,7 +166,13 @@ static NSString *const kStoreTypeKey = @"StoreType";
 	if (options) { settings[kStoreOptionsKey] = options; }
 	if (URL) { settings[kStoreURLKey] = URL; }
 	if (type) { settings[kStoreTypeKey] = type; }
+	if (configuration) { [self removeStoreDefinitionForConfiguration:nil]; }
 	__storeConfigurations[configuration ?: [NSNull null]] = settings;
+}
+
+
++ (void)removeStoreDefinitionForConfiguration:(NSString *)configuration {
+	[__storeConfigurations removeObjectForKey:(configuration ?: [NSNull null])];
 }
 
 
@@ -192,22 +198,25 @@ static NSString *const kStoreTypeKey = @"StoreType";
 }
 
 
-+ (void)addStoreForConfiguration:(NSString *)configuration toCoordinator:(NSPersistentStoreCoordinator *)coordinator {
-	NSError *error = nil;
-	NSDictionary *settings = __storeConfigurations[configuration ?: [NSNull null]];
-	NSURL *URL = settings[kStoreURLKey];
-	NSString *type = settings[kStoreTypeKey];
-	NSDictionary *options = settings[kStoreOptionsKey];
-	[coordinator addPersistentStoreWithType:type configuration:configuration URL:URL options:options error:&error];
-	if (error) {
-		if (__automaticallyResetsPersistentStore && error.code == 134130) {
-			[[NSFileManager defaultManager] removeItemAtURL:URL error:nil];
-			[coordinator addPersistentStoreWithType:type configuration:configuration URL:URL options:options error:&error];
++ (void)addPersistentStoresFromDictionary:(NSDictionary *)dictionary toCoordinator:(NSPersistentStoreCoordinator *)coordinator {
+	[dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+		NSError *error = nil;
+		NSDictionary *settings = __storeConfigurations[key ?: [NSNull null]];
+		NSString *configuration = ([key isKindOfClass:[NSString class]] ? key : nil);
+		NSURL *URL = settings[kStoreURLKey];
+		NSString *type = settings[kStoreTypeKey];
+		NSDictionary *options = settings[kStoreOptionsKey];
+		[coordinator addPersistentStoreWithType:type configuration:configuration URL:URL options:options error:&error];
+		if (error) {
+			if (__automaticallyResetsPersistentStore && error.code == 134130) {
+				[[NSFileManager defaultManager] removeItemAtURL:URL error:nil];
+				[coordinator addPersistentStoreWithType:type configuration:configuration URL:URL options:options error:&error];
+			}
+			else {
+				NSLog(@"[SSDataKit] Failed to add persistent store: %@ %@", error, [error userInfo]);
+			}
 		}
-		else {
-			NSLog(@"[SSDataKit] Failed to add persistent store: %@ %@", error, [error userInfo]);
-		}
-	}
+	}];
 }
 
 
@@ -217,13 +226,7 @@ static NSString *const kStoreTypeKey = @"StoreType";
 	dispatch_once(&token, ^{
 		NSManagedObjectModel *model = [self managedObjectModel];
 		coordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
-		[__storeConfigurations enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-			id configuration = nil;
-			if ([key isKindOfClass:[NSString class]]) {
-				configuration = key;
-			}
-			[self addStoreForConfiguration:configuration toCoordinator:coordinator];
-		}];
+		[self addPersistentStoresFromDictionary:__storeConfigurations toCoordinator:coordinator];
 	});
 	return coordinator;
 }
@@ -241,17 +244,18 @@ static NSString *const kStoreTypeKey = @"StoreType";
 		[__privateQueueContext reset];
 		__privateQueueContext = nil;
 		
-		// blow away stores
+		// blow away stores and reload
 		NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
 		NSFileManager *manager = [NSFileManager defaultManager];
 		for (NSPersistentStore *store in [coordinator persistentStores]) {
 			NSURL *URL = [store URL];
-			NSString *configuration = [store configurationName];
 			if ([coordinator removePersistentStore:store error:nil]) {
 				[manager removeItemAtURL:URL error:nil];
-				[self addStoreForConfiguration:configuration toCoordinator:coordinator];
 			}
 		}
+		
+		// reload
+		[self addPersistentStoresFromDictionary:__storeConfigurations toCoordinator:coordinator];
 		
 	}];
 }
