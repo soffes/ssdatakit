@@ -44,13 +44,39 @@ Changes saved here are automatically reflected in the `privateQueueContext`.
 
 #pragma mark - Configuring the Persistent Store
 
-+ (NSPersistentStoreCoordinator *)persistentStoreCoordinator;
-+ (NSDictionary *)persistentStoreOptions;
-+ (void)setPersistentStoreOptions:(NSDictionary *)options;
+/**
+ Helpers for handling default store configuration parameters. Override these
+ to return other default settings, or call
+ `setPersistentStoreOptions:type:URL:forConfiguration:` passing `nil` for
+ `configuration`.
+ */
++ (NSURL *)defaultPersistentStoreURL;
++ (NSDictionary *)defaultPersistentStoreOptions;
++ (NSString *)defaultPersistentStoreType;
+
+/**
+ Set the options, type, and location for the store with the given configuration.
+ All of these parameters mirror those seen on `+ [NSPersistentStoreCoordinator
+ addPersistentStoreWithType:configuration:URL:options:error:&error]`. The
+ only required paramter here is `type`.
+ */
++ (void)setPersistentStoreOptions:(NSDictionary *)options
+							 type:(NSString *)type
+							  URL:(NSURL *)URL
+				 forConfiguration:(NSString *)configuration;
+
+/**
+ Set and get the managed object model. Loaded when creating the persistent
+ store coordinator.
+ */
 + (NSManagedObjectModel *)managedObjectModel;
 + (void)setManagedObjectModel:(NSManagedObjectModel *)model;
-+ (NSURL *)persistentStoreURL;
-+ (void)setPersistentStoreURL:(NSURL *)url;
+
+/**
+ Returns the persistent coordinator. If none exists, one is created and all
+ persisten store configurations are loaded.
+ */
++ (NSPersistentStoreCoordinator *)persistentStoreCoordinator;
 
 
 #pragma mark - Resetting the Presistent Store
