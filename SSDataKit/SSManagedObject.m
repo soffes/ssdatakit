@@ -173,9 +173,11 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 	// unwind old contexts
 	[[NSNotificationCenter defaultCenter] removeObserver:__contextSaveObserver];
-	__privateQueueContext = nil;
+	[__mainQueueContext reset];
 	__mainQueueContext = nil;
-
+	[__privateQueueContext reset];
+	__privateQueueContext = nil;
+	
 	NSURL *url = [self persistentStoreURL];
 	NSPersistentStoreCoordinator *psc = [SSManagedObject persistentStoreCoordinator];
 	if ([psc removePersistentStore:psc.persistentStores.lastObject error:nil]) {
