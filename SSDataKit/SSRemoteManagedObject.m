@@ -163,7 +163,14 @@
 		return YES;
 	}
 
-	return self.updatedAt == nil || [self.updatedAt isEqualToDate:[[self class] parseDate:dictionary[@"updated_at"]]] == NO;
+	if (self.updatedAt == nil) { return YES; }
+
+	NSDate *newDate = [[self class] parseDate:dictionary[@"updated_at"]];
+	if (newDate && [self.updatedAt compare:newDate] == NSOrderedAscending) {
+		return YES;
+	}
+
+	return NO;
 }
 
 
