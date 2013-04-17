@@ -159,11 +159,9 @@
 
 
 - (BOOL)shouldUnpackDictionary:(NSDictionary *)dictionary {
-	if (![self respondsToSelector:@selector(updatedAt)]) {
+	if (![self respondsToSelector:@selector(updatedAt)] || !self.updatedAt) {
 		return YES;
 	}
-
-	if (self.updatedAt == nil) { return YES; }
 
 	NSDate *newDate = [[self class] parseDate:dictionary[@"updated_at"]];
 	if (newDate && [self.updatedAt compare:newDate] == NSOrderedAscending) {
