@@ -78,7 +78,7 @@
 	}
 
 	// Extract the remoteID from the dictionary
-	NSNumber *remoteID = dictionary[@"id"];
+	NSNumber *remoteID = @([[dictionary objectForKey:@"id"] integerValue]);
 
 	// If there isn't a remoteID, we won't find the object. Return nil.
 	if (!remoteID || remoteID.integerValue == 0) {
@@ -115,7 +115,7 @@
 	}
 
 	// Extract the remoteID from the dictionary
-	NSNumber *remoteID = dictionary[@"id"];
+	NSNumber *remoteID = @([[dictionary objectForKey:@"id"] integerValue]);
 
 	// If there isn't a remoteID, we won't find the object. Return nil.
 	if (!remoteID || remoteID.integerValue == 0) {
@@ -145,7 +145,7 @@
 
 - (void)unpackDictionary:(NSDictionary *)dictionary {
 	if (!self.isRemote) {
-		self.remoteID = dictionary[@"id"];
+		self.remoteID = @([[dictionary objectForKey:@"id"] integerValue]);
 	}
 
 	if ([self respondsToSelector:@selector(setCreatedAt:)]) {
