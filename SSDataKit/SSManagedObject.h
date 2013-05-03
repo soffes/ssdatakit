@@ -51,6 +51,8 @@ Changes saved here are automatically reflected in the `privateQueueContext`.
 + (void)setManagedObjectModel:(NSManagedObjectModel *)model;
 + (NSURL *)persistentStoreURL;
 + (void)setPersistentStoreURL:(NSURL *)url;
++ (NSString *)persistentStoreType;
++ (void)setPersistentStoreType:(NSString *)persistentStoreType;
 
 
 #pragma mark - Resetting the Presistent Store
