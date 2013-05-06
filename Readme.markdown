@@ -11,30 +11,30 @@ There is a lot of boilerplate code required to write a Core Data application. Th
 * Reflection
 * Easy creating and deleting
 
-### SSManagedObjectContextObserver
+### SSRemoteManagedObject
 
-* Observe inserted and updated objects in a context
+* Easily find or create objects by a remote ID
+* Unpack `NSDictionary`'s into your Core Data object's attributes
 
-### SSManagedObjectContext
+## Example
 
-* Adds hooks for SSManagedObjectContextObserver
+This is very simple example of how to use SSRemoteManagedObject.
 
-## Using the Context Observer
-
-You can use `SSManagedObjectContextObserver` to observe when any object is inserted or updated in a context. You can optionally filter this by setting its `entity` property.
-
-Example: (`Photo` is a subclass of `SSManagedObject`)
+Post.m
 
 ``` objective-c
-SSManagedObjectContextObserver *observer = [[SSManagedObjectContextObserver alloc] init];
-observer.entity = [Photo entityDescription];
-observer.observationBlock = ^(NSSet *insertedObjects, NSSet *updatedObjects) {
-	NSLog(@"Inserted %i photos. Updated %i photos.", insertedObjects.count, updatedObjects.count);
-};
-[[SSManagedObject mainContext] addObjectObserver:observer];
-[observer release];
+- (void)unpackDictionary:(NSDictionary *)dictionary {
+  [super unpackDictionary:dictionary];
+  self.title = dictionary[@"title"];
+}
 ```
 
-The `observationBlock` will be handed sets of `NSManagedObjectID`s for the inserted and updated objects after a save completes on the observed context. This is handy if you need to do background processing on large sets of changing objects.
+Now you can create and find posts easily.
 
-If you need to observe deletes, modify an object before save, get objects ordering, etc, you should use the hooks in `NSManagedObject` or use `NSFetchedResultsController`.
+``` objective-c
+Post *post = [Post objectWithDictionary:@{@"id": @(1), @"title": @"Hello World"}];
+Post *anotherPost = [Post objectWithRemoteID:@(1)];
+NSLog(@"Equal: %i", [post isEqual:anotherPost]); // Equal: 1
+```
+
+For a more complete example, see [CheddarKit](https://github.com/nothingmagical/cheddarkit) which is used in [Cheddar for iOS](https://github.com/nothingmagical/cheddar-ios) and [Cheddar for Mac](https://github.com/nothingmagical/cheddar-mac).
