@@ -22,6 +22,19 @@
 
 
 + (id)objectWithRemoteID:(NSNumber *)remoteID context:(NSManagedObjectContext *)context {
+	
+	// If there isn't a suitable remoteID, we won't find the object. Return nil.
+	if (!remoteID ||
+		![remoteID respondsToSelector:@selector(integerValue)] ||
+		[remoteID integerValue] == 0) {
+		return nil;
+	}
+	
+	// Default to the main context
+	if (!context) {
+		context = [self mainQueueContext];
+	}
+	
 	// Look up the object
 	SSRemoteManagedObject *object = [self existingObjectWithRemoteID:remoteID context:context];
 
@@ -42,6 +55,14 @@
 
 
 + (id)existingObjectWithRemoteID:(NSNumber *)remoteID context:(NSManagedObjectContext *)context {
+	
+	// If there isn't a suitable remoteID, we won't find the object. Return nil.
+	if (!remoteID ||
+		![remoteID respondsToSelector:@selector(integerValue)] ||
+		[remoteID integerValue] == 0) {
+		return nil;
+	}
+	
 	// Default to the main context
 	if (!context) {
 		context = [self mainQueueContext];
@@ -55,14 +76,9 @@
 
 	// Execute the fetch request
 	NSArray *results = [context executeFetchRequest:fetchRequest error:nil];
-
-	// If the object is not found, return nil
-	if (results.count == 0) {
-		return nil;
-	}
-
+	
 	// Return the object
-	return [results objectAtIndex:0];
+	return [results lastObject];
 }
 
 
@@ -72,27 +88,13 @@
 
 
 + (id)objectWithDictionary:(NSDictionary *)dictionary context:(NSManagedObjectContext *)context {
-	// If there isn't a dictionary, we won't find the object. Return nil.
-	if (!dictionary || [dictionary isEqual:[NSNull null]]) {
-		return nil;
-	}
-
+	
 	// Extract the remoteID from the dictionary
 	NSNumber *remoteID = @([[dictionary objectForKey:@"id"] integerValue]);
-
-	// If there isn't a remoteID, we won't find the object. Return nil.
-	if (!remoteID || remoteID.integerValue == 0) {
-		return nil;
-	}
-
-	// Default to the main context
-	if (!context) {
-		context = [self mainQueueContext];
-	}
-
-	// Find or create the object
+	
+	// Find object by remoteID
 	SSRemoteManagedObject *object = [[self class] objectWithRemoteID:remoteID context:context];
-
+	
 	// Only unpack if necessary
 	if ([object shouldUnpackDictionary:dictionary]) {
 		[object unpackDictionary:dictionary];
@@ -109,35 +111,18 @@
 
 
 + (id)existingObjectWithDictionary:(NSDictionary *)dictionary context:(NSManagedObjectContext *)context {
-	// If there isn't a dictionary, we won't find the object. Return nil.
-	if (!dictionary) {
-		return nil;
-	}
-
+	
 	// Extract the remoteID from the dictionary
 	NSNumber *remoteID = @([[dictionary objectForKey:@"id"] integerValue]);
-
-	// If there isn't a remoteID, we won't find the object. Return nil.
-	if (!remoteID || remoteID.integerValue == 0) {
-		return nil;
-	}
-
-	// Default to the main context
-	if (!context) {
-		context = [self mainQueueContext];
-	}
-
-	// Lookup the object
+	
+	// Find object by remoteID
 	SSRemoteManagedObject *object = [[self class] existingObjectWithRemoteID:remoteID context:context];
-	if (!object) {
-		return nil;
-	}
-
+	
 	// Only unpack if necessary
 	if ([object shouldUnpackDictionary:dictionary]) {
 		[object unpackDictionary:dictionary];
 	}
-
+	
 	// Return the new or updated object
 	return object;
 }
