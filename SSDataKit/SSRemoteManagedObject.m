@@ -89,6 +89,11 @@
 
 + (id)objectWithDictionary:(NSDictionary *)dictionary context:(NSManagedObjectContext *)context {
 	
+	// Make sure we have a dictionary
+	if (![dictionary isKindOfClass:[NSDictionary class]]) {
+		return nil;
+	}
+	
 	// Extract the remoteID from the dictionary
 	NSNumber *remoteID = @([[dictionary objectForKey:@"id"] integerValue]);
 	
@@ -111,6 +116,11 @@
 
 
 + (id)existingObjectWithDictionary:(NSDictionary *)dictionary context:(NSManagedObjectContext *)context {
+	
+	// Make sure we have a dictionary
+	if (![dictionary isKindOfClass:[NSDictionary class]]) {
+		return nil;
+	}
 	
 	// Extract the remoteID from the dictionary
 	NSNumber *remoteID = @([[dictionary objectForKey:@"id"] integerValue]);
