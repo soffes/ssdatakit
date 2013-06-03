@@ -62,14 +62,20 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 }
 
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 + (NSManagedObjectContext *)mainContext {
 	return [self mainQueueContext];
 }
+#pragma clang diagnostic pop
 
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 + (BOOL)hasMainContext {
 	return [self hasMainQueueContext];
 }
+#pragma clang diagnostic pop
 
 
 + (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
