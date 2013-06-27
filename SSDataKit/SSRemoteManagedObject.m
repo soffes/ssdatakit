@@ -205,6 +205,13 @@
 			strncpy(newStr, str, len - 1);
 			strncpy(newStr + len - 1, "+0000", 5);
 		}
+		
+		//Milliseconds parsing
+		else if (len == 24 && str[len - 1] == 'Z') {
+			strncpy(newStr, str, len - 1);
+			strncpy(newStr, str, len - 5);
+			strncpy(newStr + len - 6, "+0000", 5);
+		}
 
 		// Timezone
 		else if (len == 25 && str[22] == ':') {
