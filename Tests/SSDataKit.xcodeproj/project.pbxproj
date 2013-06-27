@@ -1,0 +1,356 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		21E16B66177CB09E0010E281 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21E16B65177CB09E0010E281 /* SenTestingKit.framework */; };
+		21E16B67177CB09E0010E281 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21E16B42177CB09D0010E281 /* UIKit.framework */; };
+		21E16B68177CB09E0010E281 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21E16B44177CB09D0010E281 /* Foundation.framework */; };
+		21E16B69177CB09E0010E281 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21E16B48177CB09D0010E281 /* CoreData.framework */; };
+		21ECF5B8177CB0DC008F9AA2 /* SSDataKitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 21ECF5B7177CB0D6008F9AA2 /* SSDataKitTests.m */; };
+		21ECF5CF177CB122008F9AA2 /* NSManagedObjectContext+SSDataKitAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 21ECF5BD177CB122008F9AA2 /* NSManagedObjectContext+SSDataKitAdditions.m */; };
+		21ECF5D0177CB122008F9AA2 /* SSFilterableFetchedResultsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 21ECF5C0177CB122008F9AA2 /* SSFilterableFetchedResultsController.m */; };
+		21ECF5D1177CB122008F9AA2 /* SSFilteredResultsFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 21ECF5C2177CB122008F9AA2 /* SSFilteredResultsFilter.m */; };
+		21ECF5D2177CB122008F9AA2 /* SSFilteredResultsSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 21ECF5C4177CB122008F9AA2 /* SSFilteredResultsSection.m */; };
+		21ECF5D3177CB122008F9AA2 /* SSManagedCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 21ECF5C6177CB122008F9AA2 /* SSManagedCollectionViewController.m */; };
+		21ECF5D4177CB122008F9AA2 /* SSManagedObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 21ECF5C8177CB122008F9AA2 /* SSManagedObject.m */; };
+		21ECF5D5177CB122008F9AA2 /* SSManagedTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 21ECF5CA177CB122008F9AA2 /* SSManagedTableViewController.m */; };
+		21ECF5D6177CB122008F9AA2 /* SSManagedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 21ECF5CC177CB122008F9AA2 /* SSManagedViewController.m */; };
+		21ECF5D7177CB122008F9AA2 /* SSRemoteManagedObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 21ECF5CE177CB122008F9AA2 /* SSRemoteManagedObject.m */; };
+		21ECF5D8177CB28C008F9AA2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21E16B46177CB09D0010E281 /* CoreGraphics.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		21E16B42177CB09D0010E281 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		21E16B44177CB09D0010E281 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		21E16B46177CB09D0010E281 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		21E16B48177CB09D0010E281 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		21E16B64177CB09E0010E281 /* SSDataKitTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SSDataKitTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		21E16B65177CB09E0010E281 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		21ECF5B5177CB0D6008F9AA2 /* SSDataKitTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SSDataKitTests-Info.plist"; sourceTree = "<group>"; };
+		21ECF5B6177CB0D6008F9AA2 /* SSDataKitTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSDataKitTests.h; sourceTree = "<group>"; };
+		21ECF5B7177CB0D6008F9AA2 /* SSDataKitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SSDataKitTests.m; sourceTree = "<group>"; };
+		21ECF5BC177CB122008F9AA2 /* NSManagedObjectContext+SSDataKitAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObjectContext+SSDataKitAdditions.h"; sourceTree = "<group>"; };
+		21ECF5BD177CB122008F9AA2 /* NSManagedObjectContext+SSDataKitAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObjectContext+SSDataKitAdditions.m"; sourceTree = "<group>"; };
+		21ECF5BE177CB122008F9AA2 /* SSDataKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSDataKit.h; sourceTree = "<group>"; };
+		21ECF5BF177CB122008F9AA2 /* SSFilterableFetchedResultsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSFilterableFetchedResultsController.h; sourceTree = "<group>"; };
+		21ECF5C0177CB122008F9AA2 /* SSFilterableFetchedResultsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSFilterableFetchedResultsController.m; sourceTree = "<group>"; };
+		21ECF5C1177CB122008F9AA2 /* SSFilteredResultsFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSFilteredResultsFilter.h; sourceTree = "<group>"; };
+		21ECF5C2177CB122008F9AA2 /* SSFilteredResultsFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSFilteredResultsFilter.m; sourceTree = "<group>"; };
+		21ECF5C3177CB122008F9AA2 /* SSFilteredResultsSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSFilteredResultsSection.h; sourceTree = "<group>"; };
+		21ECF5C4177CB122008F9AA2 /* SSFilteredResultsSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSFilteredResultsSection.m; sourceTree = "<group>"; };
+		21ECF5C5177CB122008F9AA2 /* SSManagedCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSManagedCollectionViewController.h; sourceTree = "<group>"; };
+		21ECF5C6177CB122008F9AA2 /* SSManagedCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSManagedCollectionViewController.m; sourceTree = "<group>"; };
+		21ECF5C7177CB122008F9AA2 /* SSManagedObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSManagedObject.h; sourceTree = "<group>"; };
+		21ECF5C8177CB122008F9AA2 /* SSManagedObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSManagedObject.m; sourceTree = "<group>"; };
+		21ECF5C9177CB122008F9AA2 /* SSManagedTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSManagedTableViewController.h; sourceTree = "<group>"; };
+		21ECF5CA177CB122008F9AA2 /* SSManagedTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSManagedTableViewController.m; sourceTree = "<group>"; };
+		21ECF5CB177CB122008F9AA2 /* SSManagedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSManagedViewController.h; sourceTree = "<group>"; };
+		21ECF5CC177CB122008F9AA2 /* SSManagedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSManagedViewController.m; sourceTree = "<group>"; };
+		21ECF5CD177CB122008F9AA2 /* SSRemoteManagedObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSRemoteManagedObject.h; sourceTree = "<group>"; };
+		21ECF5CE177CB122008F9AA2 /* SSRemoteManagedObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSRemoteManagedObject.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		21E16B60177CB09E0010E281 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				21ECF5D8177CB28C008F9AA2 /* CoreGraphics.framework in Frameworks */,
+				21E16B66177CB09E0010E281 /* SenTestingKit.framework in Frameworks */,
+				21E16B67177CB09E0010E281 /* UIKit.framework in Frameworks */,
+				21E16B68177CB09E0010E281 /* Foundation.framework in Frameworks */,
+				21E16B69177CB09E0010E281 /* CoreData.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		21E16B36177CB09D0010E281 = {
+			isa = PBXGroup;
+			children = (
+				21ECF5BB177CB122008F9AA2 /* SSDataKit */,
+				21ECF5B9177CB0F5008F9AA2 /* Classes */,
+				21ECF5BA177CB0F9008F9AA2 /* Resources */,
+				21E16B41177CB09D0010E281 /* Frameworks */,
+				21E16B40177CB09D0010E281 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		21E16B40177CB09D0010E281 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				21E16B64177CB09E0010E281 /* SSDataKitTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		21E16B41177CB09D0010E281 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				21E16B42177CB09D0010E281 /* UIKit.framework */,
+				21E16B44177CB09D0010E281 /* Foundation.framework */,
+				21E16B46177CB09D0010E281 /* CoreGraphics.framework */,
+				21E16B48177CB09D0010E281 /* CoreData.framework */,
+				21E16B65177CB09E0010E281 /* SenTestingKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		21ECF5B9177CB0F5008F9AA2 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				21ECF5B6177CB0D6008F9AA2 /* SSDataKitTests.h */,
+				21ECF5B7177CB0D6008F9AA2 /* SSDataKitTests.m */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		21ECF5BA177CB0F9008F9AA2 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				21ECF5B5177CB0D6008F9AA2 /* SSDataKitTests-Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		21ECF5BB177CB122008F9AA2 /* SSDataKit */ = {
+			isa = PBXGroup;
+			children = (
+				21ECF5BC177CB122008F9AA2 /* NSManagedObjectContext+SSDataKitAdditions.h */,
+				21ECF5BD177CB122008F9AA2 /* NSManagedObjectContext+SSDataKitAdditions.m */,
+				21ECF5BE177CB122008F9AA2 /* SSDataKit.h */,
+				21ECF5BF177CB122008F9AA2 /* SSFilterableFetchedResultsController.h */,
+				21ECF5C0177CB122008F9AA2 /* SSFilterableFetchedResultsController.m */,
+				21ECF5C1177CB122008F9AA2 /* SSFilteredResultsFilter.h */,
+				21ECF5C2177CB122008F9AA2 /* SSFilteredResultsFilter.m */,
+				21ECF5C3177CB122008F9AA2 /* SSFilteredResultsSection.h */,
+				21ECF5C4177CB122008F9AA2 /* SSFilteredResultsSection.m */,
+				21ECF5C5177CB122008F9AA2 /* SSManagedCollectionViewController.h */,
+				21ECF5C6177CB122008F9AA2 /* SSManagedCollectionViewController.m */,
+				21ECF5C7177CB122008F9AA2 /* SSManagedObject.h */,
+				21ECF5C8177CB122008F9AA2 /* SSManagedObject.m */,
+				21ECF5C9177CB122008F9AA2 /* SSManagedTableViewController.h */,
+				21ECF5CA177CB122008F9AA2 /* SSManagedTableViewController.m */,
+				21ECF5CB177CB122008F9AA2 /* SSManagedViewController.h */,
+				21ECF5CC177CB122008F9AA2 /* SSManagedViewController.m */,
+				21ECF5CD177CB122008F9AA2 /* SSRemoteManagedObject.h */,
+				21ECF5CE177CB122008F9AA2 /* SSRemoteManagedObject.m */,
+			);
+			name = SSDataKit;
+			path = ../SSDataKit;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		21E16B63177CB09E0010E281 /* SSDataKitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 21E16B7A177CB09E0010E281 /* Build configuration list for PBXNativeTarget "SSDataKitTests" */;
+			buildPhases = (
+				21E16B5F177CB09E0010E281 /* Sources */,
+				21E16B60177CB09E0010E281 /* Frameworks */,
+				21E16B61177CB09E0010E281 /* Resources */,
+				21E16B62177CB09E0010E281 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SSDataKitTests;
+			productName = SSDataKitTests;
+			productReference = 21E16B64177CB09E0010E281 /* SSDataKitTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		21E16B37177CB09D0010E281 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = SS;
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "Sam Soffes";
+			};
+			buildConfigurationList = 21E16B3A177CB09D0010E281 /* Build configuration list for PBXProject "SSDataKit" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 21E16B36177CB09D0010E281;
+			productRefGroup = 21E16B40177CB09D0010E281 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				21E16B63177CB09E0010E281 /* SSDataKitTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		21E16B61177CB09E0010E281 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		21E16B62177CB09E0010E281 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		21E16B5F177CB09E0010E281 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				21ECF5D4177CB122008F9AA2 /* SSManagedObject.m in Sources */,
+				21ECF5D6177CB122008F9AA2 /* SSManagedViewController.m in Sources */,
+				21ECF5CF177CB122008F9AA2 /* NSManagedObjectContext+SSDataKitAdditions.m in Sources */,
+				21ECF5D1177CB122008F9AA2 /* SSFilteredResultsFilter.m in Sources */,
+				21ECF5D7177CB122008F9AA2 /* SSRemoteManagedObject.m in Sources */,
+				21ECF5D5177CB122008F9AA2 /* SSManagedTableViewController.m in Sources */,
+				21ECF5D3177CB122008F9AA2 /* SSManagedCollectionViewController.m in Sources */,
+				21ECF5B8177CB0DC008F9AA2 /* SSDataKitTests.m in Sources */,
+				21ECF5D0177CB122008F9AA2 /* SSFilterableFetchedResultsController.m in Sources */,
+				21ECF5D2177CB122008F9AA2 /* SSFilteredResultsSection.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		21E16B75177CB09E0010E281 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		21E16B76177CB09E0010E281 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		21E16B7B177CB09E0010E281 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				INFOPLIST_FILE = "SSDataKitTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		21E16B7C177CB09E0010E281 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				INFOPLIST_FILE = "SSDataKitTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		21E16B3A177CB09D0010E281 /* Build configuration list for PBXProject "SSDataKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				21E16B75177CB09E0010E281 /* Debug */,
+				21E16B76177CB09E0010E281 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		21E16B7A177CB09E0010E281 /* Build configuration list for PBXNativeTarget "SSDataKitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				21E16B7B177CB09E0010E281 /* Debug */,
+				21E16B7C177CB09E0010E281 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 21E16B37177CB09D0010E281 /* Project object */;
+}

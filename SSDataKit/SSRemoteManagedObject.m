@@ -210,7 +210,7 @@
 		else if (len == 24 && str[len - 1] == 'Z') {
 			strncpy(newStr, str, len - 1);
 			strncpy(newStr, str, len - 5);
-			strncpy(newStr + len - 6, "+0000", 5);
+			strncpy(newStr + len - 5, "+0000", 5);
 		}
 
 		// Timezone
