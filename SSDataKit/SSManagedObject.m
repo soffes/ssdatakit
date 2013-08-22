@@ -8,6 +8,8 @@
 
 #import "SSManagedObject.h"
 
+NSString *const kSSManagedObjectWillResetNotificationName = @"SSManagedObjectWillResetNotification";
+
 static id __contextSaveObserver = nil;
 static NSManagedObjectContext *__privateQueueContext = nil;
 static NSManagedObjectContext *__mainQueueContext = nil;
@@ -187,18 +189,24 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 #pragma mark - Resetting the Presistent Store
 
 + (void)resetPersistentStore {
+	// Post will reset notification
+	[[NSNotificationCenter defaultCenter] postNotificationName:kSSManagedObjectWillResetNotificationName object:nil userInfo:nil];
 
-	// unwind old contexts
+	// Destroy old contexts
 	[[NSNotificationCenter defaultCenter] removeObserver:__contextSaveObserver];
 	[__mainQueueContext reset];
 	__mainQueueContext = nil;
+
 	[__privateQueueContext reset];
 	__privateQueueContext = nil;
-	
+
+	// Delete old persistent store
 	NSURL *url = [self persistentStoreURL];
 	NSPersistentStoreCoordinator *psc = [SSManagedObject persistentStoreCoordinator];
 	if ([psc removePersistentStore:psc.persistentStores.lastObject error:nil]) {
 		[[NSFileManager defaultManager] removeItemAtURL:url error:nil];
+
+		// Make a new one
 		[psc addPersistentStoreWithType:[self persistentStoreType] configuration:nil URL:url options:[SSManagedObject persistentStoreOptions] error:nil];
 	}
 }

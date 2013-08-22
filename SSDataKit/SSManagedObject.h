@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
+extern NSString *const kSSManagedObjectWillResetNotificationName;
+
 @interface SSManagedObject : NSManagedObject <NSCoding>
 
 #pragma mark - Accessing the application contexts

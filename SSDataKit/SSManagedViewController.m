@@ -22,7 +22,7 @@
 #pragma mark - Accessors
 
 - (NSFetchedResultsController *)fetchedResultsController {
-	if (!_fetchedResultsController) {
+	if (!_fetchedResultsController && [SSManagedObject hasMainQueueContext]) {
 		_fetchedResultsController = [[[[self class] fetchedResultsControllerClass] alloc] initWithFetchRequest:self.fetchRequest
 																		managedObjectContext:self.managedObjectContext
 																		  sectionNameKeyPath:self.sectionNameKeyPath
@@ -48,11 +48,18 @@
 #pragma mark - NSObject
 
 - (void)dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	self.fetchedResultsController = nil;
 }
 
 
 #pragma mark - UIViewController
+
+- (void)viewDidLoad {
+	[super viewDidLoad];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(managedObjectContextWillReset:) name:kSSManagedObjectWillResetNotificationName object:nil];
+}
+
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
@@ -246,6 +253,13 @@
 		change();
 		completion(YES);
 	}
+}
+
+
+#pragma mark - Private
+
+- (void)managedObjectContextWillReset:(NSNotification *)notification {
+	self.fetchedResultsController = nil;
 }
 
 
