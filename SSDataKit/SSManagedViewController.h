@@ -37,6 +37,7 @@
 - (void)setLoading:(BOOL)loading animated:(BOOL)animated;
 - (BOOL)hasContent;
 - (void)updatePlaceholderViews:(BOOL)animated;
+- (CGRect)placeholderViewsFrame;
 - (void)showLoadingView:(BOOL)animated;
 - (void)hideLoadingView:(BOOL)animated;
 - (void)showNoContentView:(BOOL)animated;

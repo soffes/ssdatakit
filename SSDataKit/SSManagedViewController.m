@@ -143,6 +143,11 @@
 }
 
 
+- (CGRect)placeholderViewsFrame {
+	return self.view.bounds;
+}
+
+
 - (void)updatePlaceholderViews:(BOOL)animated {
 	// Disable animated changes for now since they are buggy
 	animated = NO;
@@ -174,7 +179,7 @@
 	}
 
 	self.loadingView.alpha = 0.0f;
-	self.loadingView.frame = self.view.bounds;
+	self.loadingView.frame = [self placeholderViewsFrame];
 	[self.view addSubview:self.loadingView];
 
 	void (^change)(void) = ^{
@@ -218,7 +223,7 @@
 	}
 
 	self.noContentView.alpha = 0.0f;
-	self.noContentView.frame = self.view.bounds;
+	self.noContentView.frame = [self placeholderViewsFrame];
 	[self.view addSubview:self.noContentView];
 
 	void (^change)(void) = ^{
