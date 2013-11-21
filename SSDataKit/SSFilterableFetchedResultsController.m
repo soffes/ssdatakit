@@ -277,6 +277,11 @@
 }
 
 
+- (NSArray *)unfilteredFetchedObjects {
+	return self.fetchedResultsController.fetchedObjects;
+}
+
+
 - (NSArray *)sections {
 	if (self.currentFilter == nil) {
 		return [self.fetchedResultsController sections];
