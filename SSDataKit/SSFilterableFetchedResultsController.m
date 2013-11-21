@@ -88,6 +88,30 @@
 }
 
 
+- (void)rebuildCurrentFilter
+{
+	[self.currentFilter.sections removeAllObjects];
+	
+	for(int i = 0; i < self.fetchedResultsController.sections.count; i++) {
+		id<NSFetchedResultsSectionInfo> section = (id<NSFetchedResultsSectionInfo>)[self.fetchedResultsController.sections objectAtIndex:i];
+		
+		SSFilteredResultsSection *newFilteredSection = [[SSFilteredResultsSection alloc] init];
+		newFilteredSection.internalName = section.name;
+		newFilteredSection.internalIndexTitle = section.indexTitle;
+		
+		for(int j = 0; j < section.objects.count; j++) {
+			NSObject *o = [section.objects objectAtIndex:j];
+			
+			if (self.currentFilter.predicate(o)) {
+				[newFilteredSection addObject:o];
+			}
+		}
+		
+		[self.currentFilter.sections addObject:newFilteredSection];
+	}
+}
+
+
 - (void)_updateObjectsForCurrentFilter:(SSFilteredResultsFilter *)currentFilter newFilter:(SSFilteredResultsFilter *)newFilter {
 	if ([(NSObject *)self.delegate respondsToSelector:@selector(controllerWillChangeContent:)]) {
 		[self.delegate controllerWillChangeContent:self.fetchedResultsController];
@@ -338,11 +362,37 @@
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
 	if ([(NSObject *)self.delegate respondsToSelector:@selector(controller:didChangeObject:atIndexPath:forChangeType:newIndexPath:)]) {
-		// TODO: Currently change notifications for deletes are not supported while filtering
-		if (type != NSFetchedResultsChangeDelete) {
-			indexPath = [self indexPathForObject:anObject];
+		if (self.currentFilter) {
+			if (type == NSFetchedResultsChangeInsert || type == NSFetchedResultsChangeUpdate) {
+				[self rebuildCurrentFilter];
+				indexPath = [self indexPathForObject:anObject];
+				if (indexPath) {
+					[self.delegate controller:controller didChangeObject:anObject atIndexPath:indexPath forChangeType:type newIndexPath:newIndexPath];
+				}
+			} else if (type == NSFetchedResultsChangeMove) {
+				NSIndexPath *previousIndexInFilter = [self.currentFilter indexPathForObject:anObject];
+				[self rebuildCurrentFilter];
+				NSIndexPath *indexInFilter = [self.currentFilter indexPathForObject:anObject];
+				
+				if (previousIndexInFilter && indexInFilter) {
+					[self.delegate controller:controller didChangeObject:anObject atIndexPath:indexPath forChangeType:NSFetchedResultsChangeMove newIndexPath:newIndexPath];
+				} else if (!previousIndexInFilter && indexInFilter) {
+					newIndexPath = [self.currentFilter indexPathForObject:anObject];
+					[self.delegate controller:controller didChangeObject:anObject atIndexPath:indexPath forChangeType:NSFetchedResultsChangeInsert newIndexPath:newIndexPath];
+				} else if (previousIndexInFilter && !indexInFilter) {
+					indexPath = previousIndexInFilter;
+					[self.delegate controller:controller didChangeObject:anObject atIndexPath:indexPath forChangeType:NSFetchedResultsChangeDelete newIndexPath:newIndexPath];
+				}
+			} else if (type == NSFetchedResultsChangeDelete) {
+				indexPath = [self.currentFilter indexPathForObject:anObject];
+				if (indexPath) {
+					[self.delegate controller:controller didChangeObject:anObject atIndexPath:indexPath forChangeType:NSFetchedResultsChangeDelete newIndexPath:newIndexPath];
+				}
+				[self rebuildCurrentFilter];
+			}
+		} else {
+			[self.delegate controller:controller didChangeObject:anObject atIndexPath:indexPath forChangeType:type newIndexPath:newIndexPath];
 		}
-		[self.delegate controller:controller didChangeObject:anObject atIndexPath:indexPath forChangeType:type newIndexPath:newIndexPath];
 	}
 }
 
