@@ -94,7 +94,8 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 		if (error) {
 			// Reset the persistent store
-			if (__automaticallyResetsPersistentStore && error.code == 134130) {
+			BOOL missingError = error.code == NSMigrationMissingSourceModelError || error.code == NSMigrationMissingMappingModelError;
+			if (__automaticallyResetsPersistentStore && missingError) {
 				[[NSFileManager defaultManager] removeItemAtURL:url error:nil];
 				[persistentStoreCoordinator addPersistentStoreWithType:[self persistentStoreType] configuration:nil URL:url options:storeOptions error:&error];
 			} else {
