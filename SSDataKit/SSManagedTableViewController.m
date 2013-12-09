@@ -8,7 +8,9 @@
 
 #import "SSManagedTableViewController.h"
 
-@implementation SSManagedTableViewController
+@implementation SSManagedTableViewController {
+	BOOL _hasFirstReload;
+}
 
 #pragma mark - Accessors
 
@@ -42,9 +44,11 @@
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-
-	// TODO: Only reload if data is empty
-	[self.tableView reloadData];
+	
+	if (_hasFirstReload) {
+		_hasFirstReload = YES;
+		[self.tableView reloadData];
+	}
 
 	if (_clearsSelectionOnViewWillAppear) {
 		[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:animated];
