@@ -23,12 +23,14 @@
 
 - (NSFetchedResultsController *)fetchedResultsController {
 	if (!_fetchedResultsController && [SSManagedObject hasMainQueueContext]) {
+		[self willCreateFetchedResultsController];
 		_fetchedResultsController = [[[[self class] fetchedResultsControllerClass] alloc] initWithFetchRequest:self.fetchRequest
 																		managedObjectContext:self.managedObjectContext
 																		  sectionNameKeyPath:self.sectionNameKeyPath
 																				   cacheName:self.cacheName];
 		_fetchedResultsController.delegate = self;
 		[_fetchedResultsController performFetch:nil];
+		[self didCreateFetchedResultsController];
 	}
 	return _fetchedResultsController;
 }
@@ -127,6 +129,18 @@
 
 - (id)objectForViewIndexPath:(NSIndexPath *)indexPath {
 	return [self.fetchedResultsController objectAtIndexPath:[self fetchedIndexPathForViewIndexPath:indexPath]];
+}
+
+
+#pragma mark - Callbacks
+
+- (void)willCreateFetchedResultsController {
+	
+}
+
+
+- (void)didCreateFetchedResultsController {
+	
 }
 
 
