@@ -42,10 +42,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-
-	// TODO: Only reload if data is empty
-	[self.tableView reloadData];
-
 	if (_clearsSelectionOnViewWillAppear) {
 		[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:animated];
 	}
@@ -61,6 +57,13 @@
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated {
 	[super setEditing:editing animated:animated];
 	[self.tableView setEditing:editing animated:animated];
+}
+
+
+#pragma mark - SSManagedViewController
+
+- (void)didCreateFetchedResultsController {
+	[self.tableView reloadData];
 }
 
 

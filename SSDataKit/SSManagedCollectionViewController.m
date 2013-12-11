@@ -40,17 +40,16 @@
 }
 
 
-- (void)viewWillAppear:(BOOL)animated {
-	[super viewWillAppear:animated];
-
-	// TODO: Only reload if data is empty
-	[self.collectionView reloadData];
-}
-
-
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
 	[self.collectionView flashScrollIndicators];
+}
+
+
+#pragma mark - SSManagedViewController
+
+- (void)didCreateFetchedResultsController {
+	[self.collectionView reloadData];
 }
 
 

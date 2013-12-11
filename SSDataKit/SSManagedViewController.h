@@ -30,6 +30,9 @@
 - (NSString *)sectionNameKeyPath;
 - (NSString *)cacheName;
 
+- (void)willCreateFetchedResultsController;
+- (void)didCreateFetchedResultsController;
+
 - (NSIndexPath *)viewIndexPathForFetchedIndexPath:(NSIndexPath *)fetchedIndexPath;
 - (NSIndexPath *)fetchedIndexPathForViewIndexPath:(NSIndexPath *)viewIndexPath;
 - (id)objectForViewIndexPath:(NSIndexPath *)indexPath;
