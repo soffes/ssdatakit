@@ -135,12 +135,12 @@
 #pragma mark - Callbacks
 
 - (void)willCreateFetchedResultsController {
-	
+	// Subclasses may override this method
 }
 
 
 - (void)didCreateFetchedResultsController {
-	
+	// Subclasses may override this method
 }
 
 
