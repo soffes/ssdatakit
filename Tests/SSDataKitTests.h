@@ -3,7 +3,7 @@
 //  SSDataKitTests
 //
 //  Created by Sam Soffes on 6/27/13.
-//  Copyright (c) 2013 Sam Soffes. All rights reserved.
+//  Copyright (c) 2013-2014 Sam Soffes. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

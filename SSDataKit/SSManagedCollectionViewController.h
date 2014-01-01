@@ -3,7 +3,7 @@
 //  SSDataKit
 //
 //  Created by Robert Dougan on 12/19/12.
-//  Copyright (c) 2012-2013 Sam Soffes. All rights reserved.
+//  Copyright (c) 2012-2014 Sam Soffes. All rights reserved.
 //
 
 #import "SSManagedViewController.h"

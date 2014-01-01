@@ -3,7 +3,7 @@
 //  SSDataKit
 //
 //  Created by Sam Soffes on 4/7/12.
-//  Copyright (c) 2012-2013 Sam Soffes. All rights reserved.
+//  Copyright (c) 2012-2014 Sam Soffes. All rights reserved.
 //
 
 #import "SSRemoteManagedObject.h"
@@ -22,19 +22,19 @@
 
 
 + (id)objectWithRemoteID:(NSNumber *)remoteID context:(NSManagedObjectContext *)context {
-	
+
 	// If there isn't a suitable remoteID, we won't find the object. Return nil.
 	if (!remoteID ||
 		![remoteID respondsToSelector:@selector(integerValue)] ||
 		[remoteID integerValue] == 0) {
 		return nil;
 	}
-	
+
 	// Default to the main context
 	if (!context) {
 		context = [self mainQueueContext];
 	}
-	
+
 	// Look up the object
 	SSRemoteManagedObject *object = [self existingObjectWithRemoteID:remoteID context:context];
 
@@ -55,14 +55,14 @@
 
 
 + (id)existingObjectWithRemoteID:(NSNumber *)remoteID context:(NSManagedObjectContext *)context {
-	
+
 	// If there isn't a suitable remoteID, we won't find the object. Return nil.
 	if (!remoteID ||
 		![remoteID respondsToSelector:@selector(integerValue)] ||
 		[remoteID integerValue] == 0) {
 		return nil;
 	}
-	
+
 	// Default to the main context
 	if (!context) {
 		context = [self mainQueueContext];
@@ -76,7 +76,7 @@
 
 	// Execute the fetch request
 	NSArray *results = [context executeFetchRequest:fetchRequest error:nil];
-	
+
 	// Return the object
 	return [results lastObject];
 }
@@ -88,18 +88,18 @@
 
 
 + (id)objectWithDictionary:(NSDictionary *)dictionary context:(NSManagedObjectContext *)context {
-	
+
 	// Make sure we have a dictionary
 	if (![dictionary isKindOfClass:[NSDictionary class]]) {
 		return nil;
 	}
-	
+
 	// Extract the remoteID from the dictionary
 	NSNumber *remoteID = @([[dictionary objectForKey:@"id"] integerValue]);
-	
+
 	// Find object by remoteID
 	SSRemoteManagedObject *object = [[self class] objectWithRemoteID:remoteID context:context];
-	
+
 	// Only unpack if necessary
 	if ([object shouldUnpackDictionary:dictionary]) {
 		[object unpackDictionary:dictionary];
@@ -116,23 +116,23 @@
 
 
 + (id)existingObjectWithDictionary:(NSDictionary *)dictionary context:(NSManagedObjectContext *)context {
-	
+
 	// Make sure we have a dictionary
 	if (![dictionary isKindOfClass:[NSDictionary class]]) {
 		return nil;
 	}
-	
+
 	// Extract the remoteID from the dictionary
 	NSNumber *remoteID = @([[dictionary objectForKey:@"id"] integerValue]);
-	
+
 	// Find object by remoteID
 	SSRemoteManagedObject *object = [[self class] existingObjectWithRemoteID:remoteID context:context];
-	
+
 	// Only unpack if necessary
 	if ([object shouldUnpackDictionary:dictionary]) {
 		[object unpackDictionary:dictionary];
 	}
-	
+
 	// Return the new or updated object
 	return object;
 }
@@ -205,7 +205,7 @@
 			strncpy(newStr, str, len - 1);
 			strncpy(newStr + len - 1, "+0000", 5);
 		}
-		
+
 		//Milliseconds parsing
 		else if (len == 24 && str[len - 1] == 'Z') {
 			strncpy(newStr, str, len - 1);
