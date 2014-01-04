@@ -56,13 +56,6 @@
 }
 
 
-#pragma mark - SSManagedViewController
-
-- (void)didCreateFetchedResultsController {
-	[self.collectionView reloadData];
-}
-
-
 #pragma mark - Initializer
 
 - (id)initWithLayout:(UICollectionViewLayout *)layout {
