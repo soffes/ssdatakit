@@ -8,7 +8,6 @@
 
 #import "SSManagedCollectionViewController.h"
 
-
 @implementation SSManagedCollectionViewController {
     NSMutableArray *_objectChanges;
     NSMutableArray *_sectionChanges;
@@ -31,9 +30,6 @@
 - (void)loadView {
 	[super loadView];
 
-    _objectChanges = [NSMutableArray array];
-    _sectionChanges = [NSMutableArray array];
-
 	// Add the collection view as a subview for increased flexibility
 	_collectionView.frame = self.view.bounds;
 	[self.view addSubview:_collectionView];
@@ -43,6 +39,20 @@
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
 	[self.collectionView flashScrollIndicators];
+}
+
+
+#pragma mark - SSManagedViewController
+
+- (void)didCreateFetchedResultsController {
+	[self.collectionView reloadData];
+}
+
+
+#pragma mark - Public
+
+- (BOOL)useChangeAnimations {
+    return YES; // To keep consistent behavior with the current release of SSDataKit
 }
 
 
@@ -94,11 +104,22 @@
 
 #pragma mark - NSFetchedResultsControllerDelegate
 
-- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
+    _objectChanges = [NSMutableArray array];
+    _sectionChanges = [NSMutableArray array];
+}
+
+
+- (void)controller:(NSFetchedResultsController *)controller
+  didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
 		   atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
-	if (self.ignoreChange) {
+	if (self.ignoreChange || ![self useChangeAnimations]) {
 		return;
 	}
+	
+    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:NSNotFound inSection:sectionIndex];
+    indexPath = [self viewIndexPathForFetchedIndexPath:indexPath];
+    sectionIndex = indexPath.section;
 
     NSMutableDictionary *change = [NSMutableDictionary new];
 
@@ -118,9 +139,12 @@
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
 	   atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
 	  newIndexPath:(NSIndexPath *)newIndexPath {
-	if (self.ignoreChange) {
+	if (self.ignoreChange || ![self useChangeAnimations]) {
 		return;
 	}
+	
+    indexPath = [self viewIndexPathForFetchedIndexPath:indexPath];
+    newIndexPath = [self viewIndexPathForFetchedIndexPath:newIndexPath];
 
     NSMutableDictionary *change = [NSMutableDictionary new];
     switch(type)
@@ -143,63 +167,60 @@
 
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-    if ([_sectionChanges count] > 0)
-    {
-        [self.collectionView performBatchUpdates:^{
-
-            for (NSDictionary *change in _sectionChanges)
-            {
-                [change enumerateKeysAndObjectsUsingBlock:^(NSNumber *key, id obj, BOOL *stop) {
-
-                    NSFetchedResultsChangeType type = [key unsignedIntegerValue];
-                    switch (type)
-                    {
-                        case NSFetchedResultsChangeInsert:
-                            [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:[obj unsignedIntegerValue]]];
-                            break;
-                        case NSFetchedResultsChangeDelete:
-                            [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:[obj unsignedIntegerValue]]];
-                            break;
-                        case NSFetchedResultsChangeUpdate:
-                            [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:[obj unsignedIntegerValue]]];
-                            break;
-                    }
-                }];
-            }
-        } completion:nil];
+    if (![self useChangeAnimations]) {
+        [self.collectionView reloadData];
+        return;
     }
-
-    if ([_objectChanges count] > 0 && [_sectionChanges count] == 0)
-    {
-        [self.collectionView performBatchUpdates:^{
-
-            for (NSDictionary *change in _objectChanges)
-            {
-                [change enumerateKeysAndObjectsUsingBlock:^(NSNumber *key, id obj, BOOL *stop) {
-
-                    NSFetchedResultsChangeType type = [key unsignedIntegerValue];
-                    switch (type)
-                    {
-                        case NSFetchedResultsChangeInsert:
-                            [self.collectionView insertItemsAtIndexPaths:@[obj]];
-                            break;
-                        case NSFetchedResultsChangeDelete:
-                            [self.collectionView deleteItemsAtIndexPaths:@[obj]];
-                            break;
-                        case NSFetchedResultsChangeUpdate:
-                            [self.collectionView reloadItemsAtIndexPaths:@[obj]];
-                            break;
-                        case NSFetchedResultsChangeMove:
-                            [self.collectionView moveItemAtIndexPath:obj[0] toIndexPath:obj[1]];
-                            break;
-                    }
-                }];
-            }
-        } completion:nil];
-    }
-
-    [_sectionChanges removeAllObjects];
-    [_objectChanges removeAllObjects];
+    
+    // Copy state so it can't be mutated out from under us
+    NSArray *sectionChanges = [_sectionChanges copy];
+    NSArray *objectChanges = [_objectChanges copy];
+    _sectionChanges = nil;
+    _objectChanges = nil;
+    
+    // Perform updates
+    [self.collectionView performBatchUpdates:^{
+        
+        // Section changes
+        for (NSDictionary *change in sectionChanges) {
+            [change enumerateKeysAndObjectsUsingBlock:^(NSNumber *key, id obj, BOOL *stop) {
+                NSFetchedResultsChangeType type = [key unsignedIntegerValue];
+                switch (type) {
+                    case NSFetchedResultsChangeInsert:
+                        [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:[obj unsignedIntegerValue]]];
+                        break;
+                    case NSFetchedResultsChangeDelete:
+                        [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:[obj unsignedIntegerValue]]];
+                        break;
+                    case NSFetchedResultsChangeUpdate:
+                        [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:[obj unsignedIntegerValue]]];
+                        break;
+                }
+            }];
+        }
+        
+        // Object changes
+        for (NSDictionary *change in objectChanges) {
+            [change enumerateKeysAndObjectsUsingBlock:^(NSNumber *key, id obj, BOOL *stop) {
+                NSFetchedResultsChangeType type = [key unsignedIntegerValue];
+                switch (type) {
+                    case NSFetchedResultsChangeInsert:
+                        [self.collectionView insertItemsAtIndexPaths:@[obj]];
+                        break;
+                    case NSFetchedResultsChangeDelete:
+                        [self.collectionView deleteItemsAtIndexPaths:@[obj]];
+                        break;
+                    case NSFetchedResultsChangeUpdate:
+                        [self.collectionView reloadItemsAtIndexPaths:@[obj]];
+                        break;
+                    case NSFetchedResultsChangeMove:
+                        [self.collectionView moveItemAtIndexPath:obj[0] toIndexPath:obj[1]];
+                        break;
+                }
+            }];
+        }
+        
+    } completion:nil];
 }
 
 @end

@@ -15,4 +15,6 @@
 - (id)initWithLayout:(UICollectionViewLayout *)layout;
 - (void)configureCell:(UICollectionViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 
+- (BOOL)useChangeAnimations;
+
 @end
