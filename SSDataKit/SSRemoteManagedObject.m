@@ -14,19 +14,24 @@
 @dynamic createdAt;
 @dynamic updatedAt;
 
-#pragma mark -
+#pragma mark - Configuration
 
-+ (id)objectWithRemoteID:(NSNumber *)remoteID {
++ (NSString *)remoteIDDictionaryKey {
+	return @"id";
+}
+
+
+#pragma mark - Find or Create
+
++ (instancetype)objectWithRemoteID:(id)remoteID {
 	return [self objectWithRemoteID:remoteID context:nil];
 }
 
 
-+ (id)objectWithRemoteID:(NSNumber *)remoteID context:(NSManagedObjectContext *)context {
++ (instancetype)objectWithRemoteID:(id)remoteID context:(NSManagedObjectContext *)context {
 
 	// If there isn't a suitable remoteID, we won't find the object. Return nil.
-	if (!remoteID ||
-		![remoteID respondsToSelector:@selector(integerValue)] ||
-		[remoteID integerValue] == 0) {
+	if (!remoteID) {
 		return nil;
 	}
 
@@ -49,17 +54,15 @@
 }
 
 
-+ (id)existingObjectWithRemoteID:(NSNumber *)remoteID {
++ (instancetype)existingObjectWithRemoteID:(id)remoteID {
 	return [self existingObjectWithRemoteID:remoteID context:nil];
 }
 
 
-+ (id)existingObjectWithRemoteID:(NSNumber *)remoteID context:(NSManagedObjectContext *)context {
++ (instancetype)existingObjectWithRemoteID:(id)remoteID context:(NSManagedObjectContext *)context {
 
 	// If there isn't a suitable remoteID, we won't find the object. Return nil.
-	if (!remoteID ||
-		![remoteID respondsToSelector:@selector(integerValue)] ||
-		[remoteID integerValue] == 0) {
+	if (!remoteID) {
 		return nil;
 	}
 
@@ -82,20 +85,19 @@
 }
 
 
-+ (id)objectWithDictionary:(NSDictionary *)dictionary {
++ (instancetype)objectWithDictionary:(NSDictionary *)dictionary {
 	return [self objectWithDictionary:dictionary context:nil];
 }
 
 
-+ (id)objectWithDictionary:(NSDictionary *)dictionary context:(NSManagedObjectContext *)context {
-
++ (instancetype)objectWithDictionary:(NSDictionary *)dictionary context:(NSManagedObjectContext *)context {
 	// Make sure we have a dictionary
 	if (![dictionary isKindOfClass:[NSDictionary class]]) {
 		return nil;
 	}
 
 	// Extract the remoteID from the dictionary
-	NSNumber *remoteID = @([[dictionary objectForKey:@"id"] integerValue]);
+	id remoteID = [dictionary objectForKey:[self remoteIDDictionaryKey]];
 
 	// Find object by remoteID
 	SSRemoteManagedObject *object = [[self class] objectWithRemoteID:remoteID context:context];
@@ -110,12 +112,12 @@
 }
 
 
-+ (id)existingObjectWithDictionary:(NSDictionary *)dictionary {
++ (instancetype)existingObjectWithDictionary:(NSDictionary *)dictionary {
 	return [self existingObjectWithDictionary:dictionary context:nil];
 }
 
 
-+ (id)existingObjectWithDictionary:(NSDictionary *)dictionary context:(NSManagedObjectContext *)context {
++ (instancetype)existingObjectWithDictionary:(NSDictionary *)dictionary context:(NSManagedObjectContext *)context {
 
 	// Make sure we have a dictionary
 	if (![dictionary isKindOfClass:[NSDictionary class]]) {
@@ -123,7 +125,7 @@
 	}
 
 	// Extract the remoteID from the dictionary
-	NSNumber *remoteID = @([[dictionary objectForKey:@"id"] integerValue]);
+	id remoteID = [dictionary objectForKey:[self remoteIDDictionaryKey]];
 
 	// Find object by remoteID
 	SSRemoteManagedObject *object = [[self class] existingObjectWithRemoteID:remoteID context:context];
@@ -137,6 +139,8 @@
 	return object;
 }
 
+
+#pragma mark - Unpacking
 
 - (void)unpackDictionary:(NSDictionary *)dictionary {
 	if (!self.isRemote) {
@@ -167,8 +171,10 @@
 }
 
 
+#pragma mark - Utilities
+
 - (BOOL)isRemote {
-	return self.remoteID.integerValue > 0;
+	return self.remoteID != nil;
 }
 
 
@@ -243,10 +249,14 @@
 
 
 + (NSArray *)defaultSortDescriptors {
-	return [NSArray arrayWithObjects:
+	if ([self instancesRespondToSelector:@selector(createdAt)]) {
+		return @[
 			[NSSortDescriptor sortDescriptorWithKey:@"createdAt" ascending:NO],
-			[NSSortDescriptor sortDescriptorWithKey:@"remoteID" ascending:NO],
-			nil];
+			[NSSortDescriptor sortDescriptorWithKey:@"remoteID" ascending:NO]
+		];
+	}
+
+	return @[[NSSortDescriptor sortDescriptorWithKey:@"remoteID" ascending:NO]];
 }
 
 @end

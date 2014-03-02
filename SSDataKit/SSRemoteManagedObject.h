@@ -12,35 +12,107 @@
 
 @interface SSRemoteManagedObject : SSManagedObject
 
-@property (nonatomic, strong) NSNumber *remoteID;
-@property (nonatomic, strong) NSDate *createdAt;
-@property (nonatomic, strong) NSDate *updatedAt;
+///-------------------------
+/// @name Default Properties
+///-------------------------
+
+/**
+ This attribute is required! You must add an attribute named `remoteID` to your data model if you want to use
+ SSRemoteManagedObject with it. It can be any type.
+ */
+@property (nonatomic) id remoteID;
+
+/**
+ Optional attribute.
+ */
+@property (nonatomic) NSDate *createdAt;
+
+/**
+ Optional attribute.
+ */
+@property (nonatomic) NSDate *updatedAt;
+
+
+///--------------------
+/// @name Configuration
+///--------------------
+
+/**
+ Key in remote dictionary for the object's remoteID attribute.
+ 
+ The default is `id`.
+ 
+ @return The key of the remote ID attribute.
+ */
++ (NSString *)remoteIDDictionaryKey;
+
+
+///---------------------
+/// @name Find or Create
+///---------------------
 
 /**
  Find an existing object with a given remote ID. The class' entity is used in the find. Therefore, this should only be
- called on a subclass. The object will be created if it is not found. If a context is not specified, the `mainContext`
- will be used.
+ called on a subclass. The object will be created if it is not found. The `mainQueueContext` will be used.
+ 
+ @param remoteID The remote ID of the object.
+ @return An existing object with the given remote ID or a new object with the remoteID set.
  */
-+ (id)objectWithRemoteID:(NSNumber *)remoteID;
-+ (id)objectWithRemoteID:(NSNumber *)remoteID context:(NSManagedObjectContext *)context;
++ (instancetype)objectWithRemoteID:(id)remoteID;
 
 /**
  Find an existing object with a given remote ID. The class' entity is used in the find. Therefore, this should only be
- called on a subclass. `nil` is returned if the object is not found. If a context is not specified, the `mainContext`
- will be used.
+ called on a subclass. The object will be created if it is not found.
+
+ @param remoteID The remote ID of the object.
+ @param context The context to use.
+ @return An existing object with the given remote ID or a new object with the remoteID set.
  */
-+ (id)existingObjectWithRemoteID:(NSNumber *)remoteID;
-+ (id)existingObjectWithRemoteID:(NSNumber *)remoteID context:(NSManagedObjectContext *)context;
++ (instancetype)objectWithRemoteID:(id)remoteID context:(NSManagedObjectContext *)context;
 
 /**
  Find an existing object with a given remote ID. The class' entity is used in the find. Therefore, this should only be
- called on a subclass. The object will be created if it is not found. If a context is not specified, the `mainContext`
- will be used.
-
- The dictionary will be unpacked if `shouldUnpackDictionary:` returns `YES`.
+ called on a subclass. `nil` is returned if the object is not found. The `mainQueueContext` will be used.
+ 
+ @param remoteID The remote ID of the object.
+ @return An existing object with the given remote ID.
  */
-+ (id)objectWithDictionary:(NSDictionary *)dictionary;
-+ (id)objectWithDictionary:(NSDictionary *)dictionary context:(NSManagedObjectContext *)context;
++ (instancetype)existingObjectWithRemoteID:(id)remoteID;
+
+/**
+ Find an existing object with a given remote ID. The class' entity is used in the find. Therefore, this should only be
+ called on a subclass. `nil` is returned if the object is not found.
+
+ @param remoteID The remote ID of the object.
+ @param context The context to use.
+ @return An existing object with the given remote ID.
+ */
++ (instancetype)existingObjectWithRemoteID:(id)remoteID context:(NSManagedObjectContext *)context;
+
+/**
+ Find an existing object with a given remote ID. The class' entity is used in the find. Therefore, this should only be
+ called on a subclass. The object will be created if it is not found. The `mainQueueContext` will be used.
+
+ The dictionary will be unpacked if `shouldUnpackDictionary:` returns `YES`. The remote ID will be extracted from the
+ dictionary using `remoteIDDictionaryKey`.
+ 
+ @param dictionary The dictionary to unpack.
+ @return An existing object with the given dictionary or a new object with the dictionary unpacked.
+ */
++ (instancetype)objectWithDictionary:(NSDictionary *)dictionary;
+
+/**
+ Find an existing object with a given remote ID. The class' entity is used in the find. Therefore, this should only be
+ called on a subclass. The object will be created if it is not found.
+
+ The dictionary will be unpacked if `shouldUnpackDictionary:` returns `YES`. The remote ID will be extracted from the
+ dictionary using `remoteIDDictionaryKey`.
+
+ @param dictionary The dictionary to unpack.
+ @param context The context to use.
+ @return An existing object with the given dictionary or a new object with the dictionary unpacked.
+ */
++ (instancetype)objectWithDictionary:(NSDictionary *)dictionary context:(NSManagedObjectContext *)context;
 
 /**
  Find an existing object with a given remote ID. The class' entity is used in the find. Therefore, this should only be
@@ -48,9 +120,31 @@
  will be used.
 
  The dictionary will be unpacked if `shouldUnpackDictionary:` returns `YES` and there is an object with the given ID.
+ The remote ID will be extracted from the dictionary using `remoteIDDictionaryKey`.
+ 
+ @param dictionary The dictionary to unpack.
+ @return An existing object with the given dictionary.
  */
-+ (id)existingObjectWithDictionary:(NSDictionary *)dictionary;
-+ (id)existingObjectWithDictionary:(NSDictionary *)dictionary context:(NSManagedObjectContext *)context;
++ (instancetype)existingObjectWithDictionary:(NSDictionary *)dictionary;
+
+/**
+ Find an existing object with a given remote ID. The class' entity is used in the find. Therefore, this should only be
+ called on a subclass. `nil` is returned if the object is not found. If a context is not specified, the `mainContext`
+ will be used.
+
+ The dictionary will be unpacked if `shouldUnpackDictionary:` returns `YES` and there is an object with the given ID.
+ The remote ID will be extracted from the dictionary using `remoteIDDictionaryKey`.
+
+ @param dictionary The dictionary to unpack.
+ @param context The context to use.
+ @return An existing object with the given dictionary.
+ */
++ (instancetype)existingObjectWithDictionary:(NSDictionary *)dictionary context:(NSManagedObjectContext *)context;
+
+
+///----------------
+/// @name Unpacking
+///----------------
 
 /**
  Map the attributes of the dictionary onto the properties of the object. The default implementation just unpacks
@@ -65,8 +159,13 @@
  */
 - (BOOL)shouldUnpackDictionary:(NSDictionary *)dictionary;
 
+
+///----------------
+/// @name Utilities
+///----------------
+
 /**
- Returns `YES` if the `remoteID` property is greater than 0. `NO` is returned if the `remoteID` is `nil` or `0`.
+ Returns `YES` if the `remoteID` property is not `nil`.
  */
 - (BOOL)isRemote;
 
