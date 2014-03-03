@@ -10,12 +10,6 @@
 
 @implementation SSManagedTableViewController
 
-#pragma mark - Accessors
-
-@synthesize tableView = _tableView;
-@synthesize clearsSelectionOnViewWillAppear = _clearsSelectionOnViewWillAppear;
-
-
 #pragma mark - NSObject
 
 - (id)init {

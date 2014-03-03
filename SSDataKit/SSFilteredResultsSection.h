@@ -11,8 +11,8 @@
 
 @interface SSFilteredResultsSection : NSObject <NSFetchedResultsSectionInfo>
 
-@property (nonatomic, strong, readwrite) NSString *internalName;
-@property (nonatomic, strong, readwrite) NSString *internalIndexTitle;
+@property (nonatomic) NSString *internalName;
+@property (nonatomic) NSString *internalIndexTitle;
 
 - (void)addObject:(NSObject *)object;
 

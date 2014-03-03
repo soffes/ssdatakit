@@ -13,10 +13,6 @@
     NSMutableArray *_sectionChanges;
 }
 
-#pragma mark - Accessors
-
-@synthesize collectionView = _collectionView;
-
 #pragma mark - NSObject
 
 - (void)dealloc {

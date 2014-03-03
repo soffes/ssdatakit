@@ -11,15 +11,9 @@
 
 @implementation SSManagedViewController
 
-@synthesize managedObject = _managedObject;
-@synthesize fetchedResultsController = _fetchedResultsController;
-@synthesize ignoreChange = _ignoreChange;
-@synthesize loading = _loading;
-@synthesize noContentView = _noContentView;
-@synthesize loadingView = _loadingView;
-
-
 #pragma mark - Accessors
+
+@synthesize fetchedResultsController = _fetchedResultsController;
 
 - (NSFetchedResultsController *)fetchedResultsController {
 	if (!_fetchedResultsController && [SSManagedObject hasMainQueueContext]) {

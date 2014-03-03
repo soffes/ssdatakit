@@ -12,10 +12,6 @@
 	NSMutableArray *_objects;
 }
 
-@synthesize internalName = _internalName;
-@synthesize internalIndexTitle = _internalIndexTitle;
-@synthesize objects = _objects;
-
 - (id)init {
     if ((self = [super init])) {
 		_objects = [[NSMutableArray alloc] init];

@@ -13,7 +13,7 @@ typedef BOOL (^SSFilterableFetchedResultsFilterPredicate)(id obj);
 @interface SSFilteredResultsFilter : NSObject
 
 @property (nonatomic, copy) SSFilterableFetchedResultsFilterPredicate predicate;
-@property (nonatomic, retain) NSMutableArray *sections;
+@property (nonatomic) NSMutableArray *sections;
 
 - (id)objectAtIndexPath:(NSIndexPath *)indexPath;
 - (NSIndexPath *)indexPathForObject:(id)object;

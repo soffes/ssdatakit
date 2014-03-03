@@ -10,22 +10,13 @@
 #import "SSFilteredResultsSection.h"
 
 @interface SSFilterableFetchedResultsController () <NSFetchedResultsControllerDelegate>
-
-- (void)_updateObjectsForCurrentFilter:(SSFilteredResultsFilter *)currentFilter newFilter:(SSFilteredResultsFilter *)newFilter;
-
-@property (nonatomic, retain) NSFetchedResultsController *fetchedResultsController;
-@property (nonatomic, retain) NSMutableDictionary *filters;
-@property (nonatomic, assign) SSFilteredResultsFilter *currentFilter;
-
+@property (nonatomic) NSFetchedResultsController *fetchedResultsController;
+@property (nonatomic) NSMutableDictionary *filters;
+@property (nonatomic) SSFilteredResultsFilter *currentFilter;
 @end
 
 
 @implementation SSFilterableFetchedResultsController
-
-@synthesize fetchedResultsController = _fetchedResultsController;
-@synthesize filters = _filters;
-@synthesize currentFilter = _currentFilter;
-@synthesize delegate = _delegate;
 
 - (id)initWithFetchRequest:(NSFetchRequest *)fetchRequest
 	   managedObjectContext:(NSManagedObjectContext *)context

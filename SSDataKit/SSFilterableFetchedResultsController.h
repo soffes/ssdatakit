@@ -19,7 +19,7 @@
 @property (nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, readonly) NSString *sectionNameKeyPath;
 @property (nonatomic, readonly) NSString *cacheName;
-@property (nonatomic, assign) id<NSFetchedResultsControllerDelegate> delegate;
+@property (nonatomic, weak) id<NSFetchedResultsControllerDelegate> delegate;
 @property (nonatomic, readonly) NSArray *fetchedObjects;
 @property (nonatomic, readonly) NSArray *sections;
 

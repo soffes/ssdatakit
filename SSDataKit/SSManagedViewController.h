@@ -14,12 +14,12 @@
 
 @interface SSManagedViewController : UIViewController <NSFetchedResultsControllerDelegate>
 
-@property (nonatomic, strong) SSManagedObject *managedObject;
-@property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
-@property (nonatomic, assign) BOOL ignoreChange;
-@property (nonatomic, assign, getter=isLoading) BOOL loading;
-@property (nonatomic, strong) UIView *noContentView;
-@property (nonatomic, strong) UIView *loadingView;
+@property (nonatomic) SSManagedObject *managedObject;
+@property (nonatomic) NSFetchedResultsController *fetchedResultsController;
+@property (nonatomic) BOOL ignoreChange;
+@property (nonatomic, getter=isLoading) BOOL loading;
+@property (nonatomic) UIView *noContentView;
+@property (nonatomic) UIView *loadingView;
 @property (nonatomic) BOOL useChangeAnimations;
 
 + (Class)fetchedResultsControllerClass;

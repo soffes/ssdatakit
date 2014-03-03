@@ -12,9 +12,6 @@
 
 @implementation SSFilteredResultsFilter
 
-@synthesize predicate = _predicate;
-@synthesize sections = _sections;
-
 - (id)objectAtIndexPath:(NSIndexPath *)indexPath {
 	SSFilteredResultsSection *section = [self.sections objectAtIndex:indexPath.section];
 	return [section.objects objectAtIndex:indexPath.row];
