@@ -12,7 +12,7 @@
 
 #pragma mark - NSObject
 
-- (id)init {
+- (instancetype)init {
 	return (self = [self initWithStyle:UITableViewStylePlain]);
 }
 
@@ -63,7 +63,7 @@
 
 #pragma mark - Initializer
 
-- (id)initWithStyle:(UITableViewStyle)style {
+- (instancetype)initWithStyle:(UITableViewStyle)style {
 	if ((self = [super init])) {
 		_tableView = [[UITableView alloc] initWithFrame:CGRectZero style:style];
 		_tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;

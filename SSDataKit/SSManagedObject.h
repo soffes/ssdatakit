@@ -80,7 +80,7 @@ Changes saved here are automatically reflected in the `privateQueueContext`.
 
 #pragma mark -  Initializing
 
-- (id)initWithContext:(NSManagedObjectContext *)context;
+- (instancetype)initWithContext:(NSManagedObjectContext *)context;
 
 
 #pragma mark - Object ID resolution
