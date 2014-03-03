@@ -20,6 +20,7 @@
 @property (nonatomic, assign, getter=isLoading) BOOL loading;
 @property (nonatomic, strong) UIView *noContentView;
 @property (nonatomic, strong) UIView *loadingView;
+@property (nonatomic) BOOL useChangeAnimations;
 
 + (Class)fetchedResultsControllerClass;
 - (NSFetchRequest *)fetchRequest;

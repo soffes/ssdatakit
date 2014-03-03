@@ -15,6 +15,5 @@
 
 - (id)initWithStyle:(UITableViewStyle)style;
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
-- (BOOL)useChangeAnimations;
 
 @end

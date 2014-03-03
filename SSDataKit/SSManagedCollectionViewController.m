@@ -49,13 +49,6 @@
 }
 
 
-#pragma mark - Public
-
-- (BOOL)useChangeAnimations {
-    return YES; // To keep consistent behavior with the current release of SSDataKit
-}
-
-
 #pragma mark - Initializer
 
 - (id)initWithLayout:(UICollectionViewLayout *)layout {

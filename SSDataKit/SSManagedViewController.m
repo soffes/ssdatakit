@@ -59,6 +59,10 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
+
+	// Default animations on for subclasses that support this.
+	self.useChangeAnimations = YES;
+
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(managedObjectContextWillReset:) name:kSSManagedObjectWillResetNotificationName object:nil];
 }
 

@@ -81,13 +81,6 @@
 }
 
 
-#pragma mark - Configuration
-
-- (BOOL)useChangeAnimations {
-	return YES;
-}
-
-
 #pragma mark - Working with Cells
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
@@ -103,8 +96,17 @@
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	// Subclasses should override this method
-	return nil;
+	// Subclasses should override this method. This is a placeholder implementation:
+
+	static NSString *const reuseIdentifier = @"SSManagedTableViewControllerCell";
+	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
+	if (!cell) {
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
+	}
+
+	[self configureCell:cell atIndexPath:indexPath];
+
+	return cell;
 }
 
 
