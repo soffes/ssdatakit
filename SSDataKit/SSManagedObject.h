@@ -99,8 +99,7 @@ Changes saved here are automatically reflected in the `privateQueueContext`.
 
 #pragma mark -  Manipulation
 
-- (void)save;
+- (BOOL)save;
 - (void)delete;
-
 
 @end
