@@ -96,7 +96,7 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 			// Reset the persistent store
 			BOOL missingError = error.code == NSMigrationMissingSourceModelError || error.code == NSMigrationMissingMappingModelError;
 			if (__automaticallyResetsPersistentStore && missingError) {
-                [SSManagedObject removeSQLiteFiles];
+				[SSManagedObject removeSQLiteFiles];
 				[persistentStoreCoordinator addPersistentStoreWithType:[self persistentStoreType] configuration:nil URL:url options:storeOptions error:&error];
 			} else {
 				NSLog(@"[SSDataKit] Failed to add persistent store: %@ %@", error, error.userInfo);
@@ -223,16 +223,16 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 }
 
 + (void)removeSQLiteFiles {
-    NSURL *sqliteURL = [SSManagedObject persistentStoreURL];
-    NSURL *baseURL = [sqliteURL URLByDeletingLastPathComponent];
-    NSString *dbFilenameString = [sqliteURL lastPathComponent];
+	NSURL *sqliteURL = [SSManagedObject persistentStoreURL];
+	NSURL *baseURL = [sqliteURL URLByDeletingLastPathComponent];
+	NSString *dbFilenameString = [sqliteURL lastPathComponent];
     
-    NSURL *sharedMemoryURL = [baseURL URLByAppendingPathComponent:[dbFilenameString stringByAppendingString:@"-shm"]];
-    NSURL *writeAheadLogURL = [baseURL URLByAppendingPathComponent:[dbFilenameString stringByAppendingString:@"-wal"]];
+	NSURL *sharedMemoryURL = [baseURL URLByAppendingPathComponent:[dbFilenameString stringByAppendingString:@"-shm"]];
+	NSURL *writeAheadLogURL = [baseURL URLByAppendingPathComponent:[dbFilenameString stringByAppendingString:@"-wal"]];
     
-    [[NSFileManager defaultManager] removeItemAtURL:sqliteURL error:nil];
-    [[NSFileManager defaultManager] removeItemAtURL:sharedMemoryURL error:nil];
-    [[NSFileManager defaultManager] removeItemAtURL:writeAheadLogURL error:nil];
+	[[NSFileManager defaultManager] removeItemAtURL:sqliteURL error:nil];
+	[[NSFileManager defaultManager] removeItemAtURL:sharedMemoryURL error:nil];
+	[[NSFileManager defaultManager] removeItemAtURL:writeAheadLogURL error:nil];
 }
 
 
