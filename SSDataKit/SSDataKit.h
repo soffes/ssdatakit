@@ -13,6 +13,8 @@
 #import "SSRemoteManagedObject.h"
 
 #import "NSManagedObjectContext+SSDataKitAdditions.h"
+#import "NSEntityDescription+SSDataKitAdditions.h"
+#import "NSPropertyDescription+SSDataKitAdditions.h"
 
 #if TARGET_OS_IPHONE
 	#import "SSManagedViewController.h"
