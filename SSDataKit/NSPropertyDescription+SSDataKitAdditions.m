@@ -13,7 +13,7 @@
 - (id)ss_minimumValue {
 	for (NSComparisonPredicate *predicate in [self validationPredicates]) {
 		if (predicate.predicateOperatorType == NSGreaterThanOrEqualToPredicateOperatorType) {
-			return [predicate rightExpression];
+			return [[predicate rightExpression] constantValue];
 		}
 	}
 	return nil;
@@ -23,7 +23,7 @@
 - (id)ss_maximumValue {
 	for (NSComparisonPredicate *predicate in [self validationPredicates]) {
 		if (predicate.predicateOperatorType == NSLessThanOrEqualToPredicateOperatorType) {
-			return [predicate rightExpression];
+			return [[predicate rightExpression] constantValue];
 		}
 	}
 	return nil;
