@@ -1,14 +1,15 @@
 //
-//  SSManagedObject.m
-//  SSDataKit
+//  DKTManagedObject.m
+//  Data Kit
 //
 //  Created by Sam Soffes on 10/23/11.
 //  Copyright (c) 2011-2014 Sam Soffes. All rights reserved.
 //
 
-#import "SSManagedObject.h"
+#import "DKTManagedObject.h"
+#import "NSManagedObject+DKTAdditions.h"
 
-NSString *const kSSManagedObjectWillResetNotificationName = @"SSManagedObjectWillResetNotification";
+NSString *const kDKTManagedObjectWillResetNotificationName = @"DKTManagedObjectWillResetNotification";
 
 static id __contextSaveObserver = nil;
 static NSManagedObjectContext *__privateQueueContext = nil;
@@ -20,7 +21,7 @@ static NSDictionary *__persistentStoreOptions = nil;
 static BOOL __automaticallyResetsPersistentStore = NO;
 static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
-@implementation SSManagedObject
+@implementation DKTManagedObject
 
 #pragma mark - Managing application contexts
 
@@ -96,7 +97,7 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 			// Reset the persistent store
 			BOOL missingError = error.code == NSMigrationMissingSourceModelError || error.code == NSMigrationMissingMappingModelError;
 			if (__automaticallyResetsPersistentStore && missingError) {
-				[SSManagedObject removeSQLiteFiles];
+				[DKTManagedObject removeSQLiteFiles];
 				[persistentStoreCoordinator addPersistentStoreWithType:[self persistentStoreType] configuration:nil URL:url options:storeOptions error:&error];
 			} else {
 				NSLog(@"[SSDataKit] Failed to add persistent store: %@ %@", error, error.userInfo);
@@ -131,7 +132,7 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 		// Ensure a model is loaded
 		if (!model) {
-			[[NSException exceptionWithName:@"SSManagedObjectMissingModel" reason:@"You need to provide a managed model." userInfo:nil] raise];
+			[[NSException exceptionWithName:@"DKTManagedObjectMissingModel" reason:@"You need to provide a managed model." userInfo:nil] raise];
 			return nil;
 		}
 
@@ -191,7 +192,7 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 + (void)resetPersistentStore {
 	// Post will reset notification
-	[[NSNotificationCenter defaultCenter] postNotificationName:kSSManagedObjectWillResetNotificationName object:nil userInfo:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:kDKTManagedObjectWillResetNotificationName object:nil userInfo:nil];
 
 	// Destroy old contexts
 	[[NSNotificationCenter defaultCenter] removeObserver:__contextSaveObserver];
@@ -203,12 +204,12 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 	// Delete old persistent store
 	NSURL *url = [self persistentStoreURL];
-	NSPersistentStoreCoordinator *psc = [SSManagedObject persistentStoreCoordinator];
+	NSPersistentStoreCoordinator *psc = [DKTManagedObject persistentStoreCoordinator];
 	if ([psc removePersistentStore:psc.persistentStores.lastObject error:nil]) {
-		[SSManagedObject removeSQLiteFiles];
+		[DKTManagedObject removeSQLiteFiles];
 
 		// Make a new one
-		[psc addPersistentStoreWithType:[self persistentStoreType] configuration:nil URL:url options:[SSManagedObject persistentStoreOptions] error:nil];
+		[psc addPersistentStoreWithType:[self persistentStoreType] configuration:nil URL:url options:[DKTManagedObject persistentStoreOptions] error:nil];
 	}
 }
 
@@ -223,13 +224,13 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 }
 
 + (void)removeSQLiteFiles {
-	NSURL *sqliteURL = [SSManagedObject persistentStoreURL];
+	NSURL *sqliteURL = [DKTManagedObject persistentStoreURL];
 	NSURL *baseURL = [sqliteURL URLByDeletingLastPathComponent];
 	NSString *dbFilenameString = [sqliteURL lastPathComponent];
-    
+
 	NSURL *sharedMemoryURL = [baseURL URLByAppendingPathComponent:[dbFilenameString stringByAppendingString:@"-shm"]];
 	NSURL *writeAheadLogURL = [baseURL URLByAppendingPathComponent:[dbFilenameString stringByAppendingString:@"-wal"]];
-    
+
 	[[NSFileManager defaultManager] removeItemAtURL:sqliteURL error:nil];
 	[[NSFileManager defaultManager] removeItemAtURL:sharedMemoryURL error:nil];
 	[[NSFileManager defaultManager] removeItemAtURL:writeAheadLogURL error:nil];
@@ -280,16 +281,6 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 	NSEntityDescription *entity = [[self class] entityWithContext:context];
 
 	return (self = [self initWithEntity:entity insertIntoManagedObjectContext:context]);
-}
-
-
-#pragma mark - Object IDs
-
-- (NSManagedObjectID *)permanentObjectID {
-	if ([[self objectID] isTemporaryID]) {
-		[[self managedObjectContext] obtainPermanentIDsForObjects:@[ self ] error:nil];
-	}
-	return [self objectID];
 }
 
 
@@ -356,30 +347,18 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 }
 
 
-#pragma mark - Manipulation
-
-- (BOOL)save {
-	return [self.managedObjectContext save:nil];
-}
-
-
-- (void)delete {
-	[self.managedObjectContext deleteObject:self];
-}
-
-
 #pragma mark - NSCoding
 
 - (id)initWithCoder:(NSCoder *)decoder {
 	NSManagedObjectContext *context = [[self class] mainQueueContext];
 	NSPersistentStoreCoordinator *psc = [[self class] persistentStoreCoordinator];
-	self = (SSManagedObject *)[context objectWithID:[psc managedObjectIDForURIRepresentation:(NSURL *)[decoder decodeObjectForKey:kURIRepresentationKey]]];
+	self = (DKTManagedObject *)[context objectWithID:[psc managedObjectIDForURIRepresentation:(NSURL *)[decoder decodeObjectForKey:kURIRepresentationKey]]];
 	return self;
 }
 
 
 - (void)encodeWithCoder:(NSCoder *)encoder {
-	[encoder encodeObject:[[self permanentObjectID] URIRepresentation] forKey:kURIRepresentationKey];
+	[encoder encodeObject:[[self dkt_permanentObjectID] URIRepresentation] forKey:kURIRepresentationKey];
 }
 
 

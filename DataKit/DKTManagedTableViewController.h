@@ -1,14 +1,14 @@
 //
-//  SSManagedTableViewController.h
-//  SSDataKit
+//  DKTManagedTableViewController.h
+//  Data Kit
 //
 //  Created by Sam Soffes on 4/7/12.
 //  Copyright (c) 2012-2014 Sam Soffes. All rights reserved.
 //
 
-#import "SSManagedViewController.h"
+#import "DKTManagedViewController.h"
 
-@interface SSManagedTableViewController : SSManagedViewController <UITableViewDataSource, UITableViewDelegate>
+@interface DKTManagedTableViewController : DKTManagedViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, readonly) UITableView *tableView;
 @property (nonatomic) BOOL clearsSelectionOnViewWillAppear;

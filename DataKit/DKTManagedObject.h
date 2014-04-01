@@ -1,6 +1,6 @@
 //
-//  SSManagedObject.h
-//  SSDataKit
+//  DKTManagedObject.h
+//  Data Kit
 //
 //  Created by Sam Soffes on 10/23/11.
 //  Copyright (c) 2011-2014 Sam Soffes. All rights reserved.
@@ -9,9 +9,9 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-extern NSString *const kSSManagedObjectWillResetNotificationName;
+extern NSString *const kDKTManagedObjectWillResetNotificationName;
 
-@interface SSManagedObject : NSManagedObject <NSCoding>
+@interface DKTManagedObject : NSManagedObject <NSCoding>
 
 #pragma mark - Accessing the application contexts
 
@@ -83,11 +83,6 @@ Changes saved here are automatically reflected in the `privateQueueContext`.
 - (instancetype)initWithContext:(NSManagedObjectContext *)context;
 
 
-#pragma mark - Object ID resolution
-
-- (NSManagedObjectID *)permanentObjectID;
-
-
 #pragma mark -  Reflection
 
 - (NSArray *)attributeKeys;
@@ -95,11 +90,5 @@ Changes saved here are automatically reflected in the `privateQueueContext`.
 - (NSArray *)transientAttributeKeys;
 - (NSArray *)relationshipKeys;
 - (NSRelationshipDescription *)relationshipForKeyPath:(NSString *)keyPath;
-
-
-#pragma mark -  Manipulation
-
-- (BOOL)save;
-- (void)delete;
 
 @end

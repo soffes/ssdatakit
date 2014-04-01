@@ -1,24 +1,38 @@
-# SSDataKit
+# Data Kit
 
-There is a lot of boilerplate code required to write a Core Data application. This is annoying. In pretty much everything I've written since Core Data came to iOS, I have used the following class.
+Data Kit aims to do the following:
+
+* Eliminate boilerplate Core Data setup code
+* Greatly reduce fetch request boilerplate code
+* Make working with remote objects stupid easy
+* Make display Core Data objects in a view controller really simple
+* Provide some handy utilities
+
+Data Kit is made up of several Core Data subclasses, categories on Core Data objects, and several view controllers.
 
 ## What's Included
 
-### SSManagedObject
+### DKTManagedObject
 
 * Manages main context, persistent store, etc
 * Accessing entity descriptions
 * Reflection
 * Easy creating and deleting
 
-### SSRemoteManagedObject
+The main benefit of DKTManagedObject is that it always has a "main context" so you can eliminate a lot of typing if you are working on your main context. Since it has a main context, it makes getting the entity description really easy which makes lots of additional methods really simple.
+
+
+### DKTRemoteManagedObject
 
 * Easily find or create objects by a remote ID
 * Unpack `NSDictionary`'s into your Core Data object's attributes
 
+DKTRemoteManagedObject is designed to unpack NSDictionary objects into its attributes. This is perfect for getting objects from an API and putting them into Core Data.
+
+
 ## Example
 
-This is very simple example of how to use SSRemoteManagedObject.
+This is very simple example of how to use DKTRemoteManagedObject.
 
 Post.m
 
@@ -37,4 +51,12 @@ Post *anotherPost = [Post objectWithRemoteID:@(1)];
 NSLog(@"Equal: %i", [post isEqual:anotherPost]); // Equal: 1
 ```
 
-For a more complete example, see [CheddarKit](https://github.com/nothingmagical/cheddarkit) which is used in [Cheddar for iOS](https://github.com/nothingmagical/cheddar-ios) and [Cheddar for Mac](https://github.com/nothingmagical/cheddar-mac).
+## Installation
+
+If you're using [CocoaPods](http://cocoapods.org), add the following to your Podfile:
+
+``` ruby
+pod 'DataKit'
+```
+
+If you want to add Data Kit to your project manually, simply add all of the files in the `DataKit` directory and [SAMCategories](https://github.com/soffes/SAMCategories) to your project.

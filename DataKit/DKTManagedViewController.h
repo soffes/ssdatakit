@@ -1,6 +1,6 @@
 //
-//  SSManagedViewController.h
-//  SSDataKit
+//  DKTManagedViewController.h
+//  Data Kit
 //
 //  Created by Sam Soffes on 4/7/12.
 //  Copyright (c) 2012-2014 Sam Soffes. All rights reserved.
@@ -10,11 +10,11 @@
 #import <CoreData/CoreData.h>
 #import <UIKit/UIKit.h>
 
-@class SSManagedObject;
+@class DKTManagedObject;
 
-@interface SSManagedViewController : UIViewController <NSFetchedResultsControllerDelegate>
+@interface DKTManagedViewController : UIViewController <NSFetchedResultsControllerDelegate>
 
-@property (nonatomic) SSManagedObject *managedObject;
+@property (nonatomic) DKTManagedObject *managedObject;
 @property (nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (nonatomic) BOOL ignoreChange;
 @property (nonatomic, getter=isLoading) BOOL loading;

@@ -1,14 +1,16 @@
 //
-//  SSRemoteManagedObject.m
-//  SSDataKit
+//  DKTRemoteManagedObject.m
+//  Data Kit
 //
 //  Created by Sam Soffes on 4/7/12.
 //  Copyright (c) 2012-2014 Sam Soffes. All rights reserved.
 //
 
-#import "SSRemoteManagedObject.h"
+#import "DKTRemoteManagedObject.h"
 
-@implementation SSRemoteManagedObject
+#import <SAMCategories/NSDate+SAMAdditions.h>
+
+@implementation DKTRemoteManagedObject
 
 @dynamic remoteID;
 @dynamic createdAt;
@@ -41,7 +43,7 @@
 	}
 
 	// Look up the object
-	SSRemoteManagedObject *object = [self existingObjectWithRemoteID:remoteID context:context];
+	DKTRemoteManagedObject *object = [self existingObjectWithRemoteID:remoteID context:context];
 
 	// If the object doesn't exist, create it
 	if (!object) {
@@ -100,7 +102,7 @@
 	id remoteID = [dictionary objectForKey:[self remoteIDDictionaryKey]];
 
 	// Find object by remoteID
-	SSRemoteManagedObject *object = [[self class] objectWithRemoteID:remoteID context:context];
+	DKTRemoteManagedObject *object = [[self class] objectWithRemoteID:remoteID context:context];
 
 	// Only unpack if necessary
 	if ([object shouldUnpackDictionary:dictionary]) {
@@ -128,7 +130,7 @@
 	id remoteID = [dictionary objectForKey:[self remoteIDDictionaryKey]];
 
 	// Find object by remoteID
-	SSRemoteManagedObject *object = [[self class] existingObjectWithRemoteID:remoteID context:context];
+	DKTRemoteManagedObject *object = [[self class] existingObjectWithRemoteID:remoteID context:context];
 
 	// Only unpack if necessary
 	if ([object shouldUnpackDictionary:dictionary]) {
@@ -144,15 +146,16 @@
 
 - (void)unpackDictionary:(NSDictionary *)dictionary {
 	if (!self.isRemote) {
-		self.remoteID = @([[dictionary objectForKey:@"id"] integerValue]);
+		NSString *key = [[self class] remoteIDDictionaryKey];
+		self.remoteID = dictionary[key];
 	}
 
 	if ([self respondsToSelector:@selector(setCreatedAt:)]) {
-		self.createdAt = [[self class] parseDate:dictionary[@"created_at"]];
+		self.createdAt = [NSDate sam_dateFromISO8601String:dictionary[@"created_at"]];
 	}
 
 	if ([self respondsToSelector:@selector(setUpdatedAt:)]) {
-		self.updatedAt = [[self class] parseDate:dictionary[@"updated_at"]];
+		self.updatedAt = [NSDate sam_dateFromISO8601String:dictionary[@"updated_at"]];
 	}
 }
 
@@ -162,7 +165,7 @@
 		return YES;
 	}
 
-	NSDate *newDate = [[self class] parseDate:dictionary[@"updated_at"]];
+	NSDate *newDate = [NSDate sam_dateFromISO8601String:dictionary[@"updated_at"]];
 	if (newDate && [self.updatedAt compare:newDate] == NSOrderedAscending) {
 		return YES;
 	}
@@ -175,76 +178,6 @@
 
 - (BOOL)isRemote {
 	return self.remoteID != nil;
-}
-
-
-+ (NSDate *)parseDate:(id)dateStringOrDateNumber {
-	// Return nil if nil is given
-	if (!dateStringOrDateNumber || dateStringOrDateNumber == [NSNull null]) {
-		return nil;
-	}
-
-	// Parse number
-	if ([dateStringOrDateNumber isKindOfClass:[NSNumber class]]) {
-		return [NSDate dateWithTimeIntervalSince1970:[dateStringOrDateNumber doubleValue]];
-	}
-
-	// Parse string
-	else if ([dateStringOrDateNumber isKindOfClass:[NSString class]]) {
-		// ISO8601 Parser borrowed from SSToolkit. http://sstoolk.it
-		NSString *iso8601 = dateStringOrDateNumber;
-		if (!iso8601) {
-			return nil;
-		}
-
-		const char *str = [iso8601 cStringUsingEncoding:NSUTF8StringEncoding];
-		char newStr[25];
-
-		struct tm tm;
-		size_t len = strlen(str);
-		if (len == 0) {
-			return nil;
-		}
-
-		// UTC
-		if (len == 20 && str[len - 1] == 'Z') {
-			strncpy(newStr, str, len - 1);
-			strncpy(newStr + len - 1, "+0000", 5);
-		}
-
-		//Milliseconds parsing
-		else if (len == 24 && str[len - 1] == 'Z') {
-			strncpy(newStr, str, len - 1);
-			strncpy(newStr, str, len - 5);
-			strncpy(newStr + len - 5, "+0000", 5);
-		}
-
-		// Timezone
-		else if (len == 25 && str[22] == ':') {
-			strncpy(newStr, str, 22);
-			strncpy(newStr + 22, str + 23, 2);
-		}
-
-		// Poorly formatted timezone
-		else {
-			strncpy(newStr, str, len > 24 ? 24 : len);
-		}
-
-		// Add null terminator
-		newStr[sizeof(newStr) - 1] = 0;
-
-		if (strptime(newStr, "%FT%T%z", &tm) == NULL) {
-			return nil;
-		}
-
-		time_t t;
-		t = mktime(&tm);
-
-		return [NSDate dateWithTimeIntervalSince1970:t];
-	}
-
-	NSAssert1(NO, @"[SSRemoteManagedObject] Failed to parse date: %@", dateStringOrDateNumber);
-	return nil;
 }
 
 

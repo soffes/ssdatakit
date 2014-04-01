@@ -1,6 +1,6 @@
 //
-//  SSRemoteManagedObject.h
-//  SSDataKit
+//  DKTRemoteManagedObject.h
+//  Data Kit
 //
 //  Created by Sam Soffes on 4/7/12.
 //  Copyright (c) 2012-2014 Sam Soffes. All rights reserved.
@@ -8,9 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-#import "SSManagedObject.h"
 
-@interface SSRemoteManagedObject : SSManagedObject
+#import "DKTManagedObject.h"
+
+@interface DKTRemoteManagedObject : DKTManagedObject
 
 ///-------------------------
 /// @name Default Properties
@@ -18,7 +19,7 @@
 
 /**
  This attribute is required! You must add an attribute named `remoteID` to your data model if you want to use
- SSRemoteManagedObject with it. It can be any type.
+ DKTRemoteManagedObject with it. It can be any type.
  */
 @property (nonatomic) id remoteID;
 
@@ -39,9 +40,9 @@
 
 /**
  Key in remote dictionary for the object's remoteID attribute.
- 
+
  The default is `id`.
- 
+
  @return The key of the remote ID attribute.
  */
 + (NSString *)remoteIDDictionaryKey;
@@ -54,7 +55,7 @@
 /**
  Find an existing object with a given remote ID. The class' entity is used in the find. Therefore, this should only be
  called on a subclass. The object will be created if it is not found. The `mainQueueContext` will be used.
- 
+
  @param remoteID The remote ID of the object.
  @return An existing object with the given remote ID or a new object with the remoteID set.
  */
@@ -73,7 +74,7 @@
 /**
  Find an existing object with a given remote ID. The class' entity is used in the find. Therefore, this should only be
  called on a subclass. `nil` is returned if the object is not found. The `mainQueueContext` will be used.
- 
+
  @param remoteID The remote ID of the object.
  @return An existing object with the given remote ID.
  */
@@ -95,7 +96,7 @@
 
  The dictionary will be unpacked if `shouldUnpackDictionary:` returns `YES`. The remote ID will be extracted from the
  dictionary using `remoteIDDictionaryKey`.
- 
+
  @param dictionary The dictionary to unpack.
  @return An existing object with the given dictionary or a new object with the dictionary unpacked.
  */
@@ -121,7 +122,7 @@
 
  The dictionary will be unpacked if `shouldUnpackDictionary:` returns `YES` and there is an object with the given ID.
  The remote ID will be extracted from the dictionary using `remoteIDDictionaryKey`.
- 
+
  @param dictionary The dictionary to unpack.
  @return An existing object with the given dictionary.
  */
@@ -168,11 +169,5 @@
  Returns `YES` if the `remoteID` property is not `nil`.
  */
 - (BOOL)isRemote;
-
-/**
- Parse a date in a dictionary from the server. A NSNumber containing the number of seconds since 1970 or a NSString
- containing an ISO8601 string are the only valid values for `dateStringOrDateNumber`.
- */
-+ (NSDate *)parseDate:(id)dateStringOrDateNumber;
 
 @end

@@ -1,14 +1,14 @@
 //
-//  SSManagedTableViewController.m
-//  SSDataKit
+//  DKTManagedTableViewController.m
+//  Data Kit
 //
 //  Created by Sam Soffes on 4/7/12.
 //  Copyright (c) 2012-2014 Sam Soffes. All rights reserved.
 //
 
-#import "SSManagedTableViewController.h"
+#import "DKTManagedTableViewController.h"
 
-@implementation SSManagedTableViewController
+@implementation DKTManagedTableViewController
 
 #pragma mark - NSObject
 
@@ -54,7 +54,7 @@
 }
 
 
-#pragma mark - SSManagedViewController
+#pragma mark - DKTManagedViewController
 
 - (void)didCreateFetchedResultsController {
 	[self.tableView reloadData];
@@ -92,7 +92,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	// Subclasses should override this method. This is a placeholder implementation:
 
-	static NSString *const reuseIdentifier = @"SSManagedTableViewControllerCell";
+	static NSString *const reuseIdentifier = @"DKTManagedTableViewControllerCell";
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
 	if (!cell) {
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
@@ -141,7 +141,7 @@
 	if (self.ignoreChange || ![self useChangeAnimations]) {
 		return;
 	}
-	
+
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem:NSNotFound inSection:sectionIndex];
     indexPath = [self viewIndexPathForFetchedIndexPath:indexPath];
     sectionIndex = indexPath.section;

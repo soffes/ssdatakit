@@ -1,22 +1,22 @@
 //
-//  SSManagedViewController.m
-//  SSDataKit
+//  DKTManagedViewController.m
+//  Data Kit
 //
 //  Created by Sam Soffes on 4/7/12.
 //  Copyright (c) 2012-2014 Sam Soffes. All rights reserved.
 //
 
-#import "SSManagedViewController.h"
-#import "SSManagedObject.h"
+#import "DKTManagedViewController.h"
+#import "DKTManagedObject.h"
 
-@implementation SSManagedViewController
+@implementation DKTManagedViewController
 
 #pragma mark - Accessors
 
 @synthesize fetchedResultsController = _fetchedResultsController;
 
 - (NSFetchedResultsController *)fetchedResultsController {
-	if (!_fetchedResultsController && [SSManagedObject hasMainQueueContext]) {
+	if (!_fetchedResultsController && [DKTManagedObject hasMainQueueContext]) {
 		[self willCreateFetchedResultsController];
 		_fetchedResultsController = [[[[self class] fetchedResultsControllerClass] alloc] initWithFetchRequest:self.fetchRequest
 																		managedObjectContext:self.managedObjectContext
@@ -57,7 +57,7 @@
 	// Default animations on for subclasses that support this.
 	self.useChangeAnimations = YES;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(managedObjectContextWillReset:) name:kSSManagedObjectWillResetNotificationName object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(managedObjectContextWillReset:) name:kDKTManagedObjectWillResetNotificationName object:nil];
 }
 
 
@@ -84,7 +84,7 @@
 
 
 - (Class)entityClass {
-	return [SSManagedObject class];
+	return [DKTManagedObject class];
 }
 
 

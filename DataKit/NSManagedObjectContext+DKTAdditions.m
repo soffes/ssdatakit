@@ -1,14 +1,14 @@
 //
-//  NSManagedObjectContext+SSDataKitAdditions.m
-//  SSDataKit
+//  NSManagedObjectContext+DKTAdditions.m
+//  Data Kit
 //
 //  Created by Sam Soffes on 1/25/12.
 //  Copyright (c) 2012-2014 Sam Soffes. All rights reserved.
 //
 
-#import "NSManagedObjectContext+SSDataKitAdditions.h"
+#import "NSManagedObjectContext+DKTAdditions.h"
 
-@implementation NSManagedObjectContext (SSDataKitAdditions)
+@implementation NSManagedObjectContext (DKTAdditions)
 
 - (NSManagedObjectContext *)newManagedObjectContextWithCurrentPersistentStoreCoordinator {
 	NSManagedObjectContext *context = [[[self class] alloc] init];

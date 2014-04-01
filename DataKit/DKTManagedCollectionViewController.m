@@ -1,14 +1,14 @@
 //
-//  SSManagedCollectionViewController.m
-//  SSDataKit
+//  DKTManagedCollectionViewController.m
+//  Data Kit
 //
 //  Created by Robert Dougan on 12/19/12.
 //  Copyright (c) 2012-2014 Sam Soffes. All rights reserved.
 //
 
-#import "SSManagedCollectionViewController.h"
+#import "DKTManagedCollectionViewController.h"
 
-@implementation SSManagedCollectionViewController {
+@implementation DKTManagedCollectionViewController {
     NSMutableArray *_objectChanges;
     NSMutableArray *_sectionChanges;
 }
@@ -38,7 +38,7 @@
 }
 
 
-#pragma mark - SSManagedViewController
+#pragma mark - DKTManagedViewController
 
 - (void)didCreateFetchedResultsController {
 	[self.collectionView reloadData];
@@ -98,7 +98,7 @@
 	if (self.ignoreChange || ![self useChangeAnimations]) {
 		return;
 	}
-	
+
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem:NSNotFound inSection:sectionIndex];
     indexPath = [self viewIndexPathForFetchedIndexPath:indexPath];
     sectionIndex = indexPath.section;
@@ -124,7 +124,7 @@
 	if (self.ignoreChange || ![self useChangeAnimations]) {
 		return;
 	}
-	
+
     indexPath = [self viewIndexPathForFetchedIndexPath:indexPath];
     newIndexPath = [self viewIndexPathForFetchedIndexPath:newIndexPath];
 
@@ -153,16 +153,16 @@
         [self.collectionView reloadData];
         return;
     }
-    
+
     // Copy state so it can't be mutated out from under us
     NSArray *sectionChanges = [_sectionChanges copy];
     NSArray *objectChanges = [_objectChanges copy];
     _sectionChanges = nil;
     _objectChanges = nil;
-    
+
     // Perform updates
     [self.collectionView performBatchUpdates:^{
-        
+
         // Section changes
         for (NSDictionary *change in sectionChanges) {
             [change enumerateKeysAndObjectsUsingBlock:^(NSNumber *key, id obj, BOOL *stop) {
@@ -180,7 +180,7 @@
                 }
             }];
         }
-        
+
         // Object changes
         for (NSDictionary *change in objectChanges) {
             [change enumerateKeysAndObjectsUsingBlock:^(NSNumber *key, id obj, BOOL *stop) {
@@ -201,7 +201,7 @@
                 }
             }];
         }
-        
+
     } completion:nil];
 }
 

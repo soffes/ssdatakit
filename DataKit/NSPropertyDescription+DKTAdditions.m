@@ -1,16 +1,16 @@
 //
-//  NSPropertyDescription+SSDataKitAdditions.m
-//  SSDataKit
+//  NSPropertyDescription+DKTAdditions.m
+//  Data Kit
 //
 //  Created by Sam Soffes on 3/31/14.
 //  Copyright (c) 2014 Sam Soffes. All rights reserved.
 //
 
-#import "NSPropertyDescription+SSDataKitAdditions.h"
+#import "NSPropertyDescription+DKTAdditions.h"
 
-@implementation NSPropertyDescription (SSDataKitAdditions)
+@implementation NSPropertyDescription (DKTAdditions)
 
-- (id)ss_minimumValue {
+- (id)dkt_minimumValue {
 	for (NSComparisonPredicate *predicate in [self validationPredicates]) {
 		if (predicate.predicateOperatorType == NSGreaterThanOrEqualToPredicateOperatorType) {
 			return [[predicate rightExpression] constantValue];
@@ -20,7 +20,7 @@
 }
 
 
-- (id)ss_maximumValue {
+- (id)dkt_maximumValue {
 	for (NSComparisonPredicate *predicate in [self validationPredicates]) {
 		if (predicate.predicateOperatorType == NSLessThanOrEqualToPredicateOperatorType) {
 			return [[predicate rightExpression] constantValue];
