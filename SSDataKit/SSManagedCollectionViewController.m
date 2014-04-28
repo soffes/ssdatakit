@@ -149,6 +149,8 @@
 
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+	[super controllerDidChangeContent:controller];
+	
     if (![self useChangeAnimations]) {
         [self.collectionView reloadData];
         return;
