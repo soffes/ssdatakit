@@ -144,7 +144,7 @@
 
 - (void)unpackDictionary:(NSDictionary *)dictionary {
 	if (!self.isRemote) {
-		self.remoteID = @([[dictionary objectForKey:@"id"] integerValue]);
+		self.remoteID = @([[dictionary objectForKey:[SSRemoteManagedObject remoteIDDictionaryKey]] integerValue]);
 	}
 
 	if ([self respondsToSelector:@selector(setCreatedAt:)]) {
