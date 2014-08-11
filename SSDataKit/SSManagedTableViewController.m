@@ -142,7 +142,7 @@
 		return;
 	}
 	
-    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:NSNotFound inSection:sectionIndex];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:NSNotFound inSection:sectionIndex];
     indexPath = [self viewIndexPathForFetchedIndexPath:indexPath];
     sectionIndex = indexPath.section;
 
