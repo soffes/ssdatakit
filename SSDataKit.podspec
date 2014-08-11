@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'SSDataKit'
-  spec.version      = '0.3.4'
+  spec.version      = '0.3.5'
   spec.summary      = 'Eliminate your Core Data boilerplate code.'
   spec.homepage     = 'https://github.com/soffes/ssdatakit'
   spec.license      = { :type => 'MIT', :file => 'LICENSE' }
