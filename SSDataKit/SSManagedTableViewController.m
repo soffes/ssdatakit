@@ -158,6 +158,10 @@
 						  withRowAnimation:UITableViewRowAnimationFade];
             break;
 		}
+
+		default: {
+			// Do nothing
+		}
     }
 }
 

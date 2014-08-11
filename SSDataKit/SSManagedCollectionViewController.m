@@ -106,12 +106,19 @@
     NSMutableDictionary *change = [NSMutableDictionary new];
 
     switch(type) {
-        case NSFetchedResultsChangeInsert:
+		case NSFetchedResultsChangeInsert: {
             change[@(type)] = @[@(sectionIndex)];
             break;
-        case NSFetchedResultsChangeDelete:
+		}
+
+		case NSFetchedResultsChangeDelete: {
             change[@(type)] = @[@(sectionIndex)];
             break;
+		}
+
+		default: {
+			// Do nothing
+		}
     }
 
     [_sectionChanges addObject:change];
@@ -170,15 +177,24 @@
             [change enumerateKeysAndObjectsUsingBlock:^(NSNumber *key, id obj, BOOL *stop) {
                 NSFetchedResultsChangeType type = [key unsignedIntegerValue];
                 switch (type) {
-                    case NSFetchedResultsChangeInsert:
+					case NSFetchedResultsChangeInsert: {
                         [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:[obj unsignedIntegerValue]]];
                         break;
-                    case NSFetchedResultsChangeDelete:
+					}
+
+					case NSFetchedResultsChangeDelete: {
                         [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:[obj unsignedIntegerValue]]];
                         break;
-                    case NSFetchedResultsChangeUpdate:
+					}
+
+					case NSFetchedResultsChangeUpdate: {
                         [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:[obj unsignedIntegerValue]]];
                         break;
+					}
+
+					default: {
+						// Do nothing
+					}
                 }
             }];
         }
