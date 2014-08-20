@@ -8,16 +8,45 @@
 
 #import "SSManagedCollectionViewController.h"
 
-@implementation SSManagedCollectionViewController {
-    NSMutableArray *_objectChanges;
-    NSMutableArray *_sectionChanges;
+@interface SSManagedCollectionViewController ()
+@property (nonatomic) NSMutableArray *objectChanges;
+@property (nonatomic) NSMutableArray *sectionChanges;
+@end
+
+@implementation SSManagedCollectionViewController
+
+#pragma mark - Accessors
+
+@synthesize collectionView = _collectionView;
+@synthesize objectChanges = _objectChanges;
+@synthesize sectionChanges = _sectionChanges;
+
+- (UICollectionView *)collectionView {
+	return _collectionView;
 }
+
+
+- (NSMutableArray *)objectChanges {
+	if (!_objectChanges) {
+		_objectChanges = [[NSMutableArray alloc] init];
+	}
+	return _objectChanges;
+}
+
+
+- (NSMutableArray *)sectionChanges {
+	if (!_sectionChanges) {
+		_sectionChanges = [[NSMutableArray alloc] init];
+	}
+	return _sectionChanges;
+}
+
 
 #pragma mark - NSObject
 
 - (void)dealloc {
-	_collectionView.dataSource = nil;
-	_collectionView.delegate = nil;
+	self.collectionView.dataSource = nil;
+	self.collectionView.delegate = nil;
 }
 
 
@@ -27,8 +56,8 @@
 	[super loadView];
 
 	// Add the collection view as a subview for increased flexibility
-	_collectionView.frame = self.view.bounds;
-	[self.view addSubview:_collectionView];
+	self.collectionView.frame = self.view.bounds;
+	[self.view addSubview:self.collectionView];
 }
 
 
@@ -87,8 +116,8 @@
 #pragma mark - NSFetchedResultsControllerDelegate
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
-    _objectChanges = [NSMutableArray array];
-    _sectionChanges = [NSMutableArray array];
+    self.objectChanges = [[NSMutableArray alloc] init];
+	self.sectionChanges = [[NSMutableArray alloc] init];
 }
 
 
@@ -121,7 +150,7 @@
 		}
     }
 
-    [_sectionChanges addObject:change];
+    [self.sectionChanges addObject:change];
 }
 
 
@@ -151,7 +180,7 @@
             change[@(type)] = @[indexPath, newIndexPath];
             break;
     }
-    [_objectChanges addObject:change];
+    [self.objectChanges addObject:change];
 }
 
 
@@ -164,11 +193,11 @@
     }
     
     // Copy state so it can't be mutated out from under us
-    NSArray *sectionChanges = [_sectionChanges copy];
-    NSArray *objectChanges = [_objectChanges copy];
-    _sectionChanges = nil;
-    _objectChanges = nil;
-    
+    NSArray *sectionChanges = [self.sectionChanges copy];
+    NSArray *objectChanges = [self.objectChanges copy];
+	self.sectionChanges = nil;
+	self.objectChanges = nil;
+
     // Perform updates
     [self.collectionView performBatchUpdates:^{
         
