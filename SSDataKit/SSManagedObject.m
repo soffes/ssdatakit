@@ -223,13 +223,14 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 }
 
 + (void)removeSQLiteFiles {
+	[[NSNotificationCenter defaultCenter] postNotificationName:kSSManagedObjectWillResetNotificationName object:nil userInfo:nil];
 	NSURL *sqliteURL = [SSManagedObject persistentStoreURL];
 	NSURL *baseURL = [sqliteURL URLByDeletingLastPathComponent];
 	NSString *dbFilenameString = [sqliteURL lastPathComponent];
-    
+
 	NSURL *sharedMemoryURL = [baseURL URLByAppendingPathComponent:[dbFilenameString stringByAppendingString:@"-shm"]];
 	NSURL *writeAheadLogURL = [baseURL URLByAppendingPathComponent:[dbFilenameString stringByAppendingString:@"-wal"]];
-    
+
 	[[NSFileManager defaultManager] removeItemAtURL:sqliteURL error:nil];
 	[[NSFileManager defaultManager] removeItemAtURL:sharedMemoryURL error:nil];
 	[[NSFileManager defaultManager] removeItemAtURL:writeAheadLogURL error:nil];
