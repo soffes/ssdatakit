@@ -194,7 +194,12 @@
 	// Parse string
 	else if ([dateStringOrDateNumber isKindOfClass:[NSString class]]) {
         NSDateComponents *dateComponents = [ISO8601Serialization dateComponentsForString:dateStringOrDateNumber];
-        NSCalendar *calendar = [NSCalendar currentCalendar];
+        static NSCalendar *calendar;
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+            calendar.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
+        });
         return [calendar dateFromComponents:dateComponents];
 	}
 
