@@ -18,6 +18,10 @@
 	iso8601 = @"2013-06-27T15:39:32.508Z";
 	date = [SSRemoteManagedObject parseDate:iso8601];
 	STAssertEqualObjects([NSDate dateWithTimeIntervalSince1970:1372347572], date, nil);
+
+    iso8601 = @"2014-10-24T23:59:59.000+00:00";
+    date = [SSRemoteManagedObject parseDate:iso8601];
+    STAssertEqualObjects([NSDate dateWithTimeIntervalSince1970:1414195199], date, nil);
 }
 
 
