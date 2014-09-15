@@ -22,6 +22,7 @@
 		21ECF5D6177CB122008F9AA2 /* SSManagedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 21ECF5CC177CB122008F9AA2 /* SSManagedViewController.m */; };
 		21ECF5D7177CB122008F9AA2 /* SSRemoteManagedObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 21ECF5CE177CB122008F9AA2 /* SSRemoteManagedObject.m */; };
 		21ECF5D8177CB28C008F9AA2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21E16B46177CB09D0010E281 /* CoreGraphics.framework */; };
+		D3A31CA130484D21826B993F /* libPods-SSDataKitTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D44F544091484C6590B11948 /* libPods-SSDataKitTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +54,8 @@
 		21ECF5CC177CB122008F9AA2 /* SSManagedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSManagedViewController.m; sourceTree = "<group>"; };
 		21ECF5CD177CB122008F9AA2 /* SSRemoteManagedObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSRemoteManagedObject.h; sourceTree = "<group>"; };
 		21ECF5CE177CB122008F9AA2 /* SSRemoteManagedObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSRemoteManagedObject.m; sourceTree = "<group>"; };
+		6C24316B02DF423E8F1D5B56 /* Pods-SSDataKitTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SSDataKitTests.xcconfig"; path = "../Pods/Pods-SSDataKitTests.xcconfig"; sourceTree = "<group>"; };
+		D44F544091484C6590B11948 /* libPods-SSDataKitTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SSDataKitTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +68,7 @@
 				21E16B67177CB09E0010E281 /* UIKit.framework in Frameworks */,
 				21E16B68177CB09E0010E281 /* Foundation.framework in Frameworks */,
 				21E16B69177CB09E0010E281 /* CoreData.framework in Frameworks */,
+				D3A31CA130484D21826B993F /* libPods-SSDataKitTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,6 +83,7 @@
 				21ECF5BA177CB0F9008F9AA2 /* Resources */,
 				21E16B41177CB09D0010E281 /* Frameworks */,
 				21E16B40177CB09D0010E281 /* Products */,
+				6C24316B02DF423E8F1D5B56 /* Pods-SSDataKitTests.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -98,6 +103,7 @@
 				21E16B46177CB09D0010E281 /* CoreGraphics.framework */,
 				21E16B48177CB09D0010E281 /* CoreData.framework */,
 				21E16B65177CB09E0010E281 /* SenTestingKit.framework */,
+				D44F544091484C6590B11948 /* libPods-SSDataKitTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -153,10 +159,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 21E16B7A177CB09E0010E281 /* Build configuration list for PBXNativeTarget "SSDataKitTests" */;
 			buildPhases = (
+				F1EC3C5B650348008E97F69B /* Check Pods Manifest.lock */,
 				21E16B5F177CB09E0010E281 /* Sources */,
 				21E16B60177CB09E0010E281 /* Frameworks */,
 				21E16B61177CB09E0010E281 /* Resources */,
 				21E16B62177CB09E0010E281 /* ShellScript */,
+				BBC750C104DC4D2081D6BB6E /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -165,7 +173,7 @@
 			name = SSDataKitTests;
 			productName = SSDataKitTests;
 			productReference = 21E16B64177CB09E0010E281 /* SSDataKitTests.octest */;
-			productType = "com.apple.product-type.bundle";
+			productType = "com.apple.product-type.bundle.ocunit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -174,6 +182,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = SS;
+				LastTestingUpgradeCheck = 0600;
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Sam Soffes";
 			};
@@ -217,6 +226,36 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+		BBC750C104DC4D2081D6BB6E /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/../Pods/Pods-SSDataKitTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F1EC3C5B650348008E97F69B /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -301,7 +340,9 @@
 		};
 		21E16B7B177CB09E0010E281 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6C24316B02DF423E8F1D5B56 /* Pods-SSDataKitTests.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
@@ -316,7 +357,9 @@
 		};
 		21E16B7C177CB09E0010E281 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6C24316B02DF423E8F1D5B56 /* Pods-SSDataKitTests.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
