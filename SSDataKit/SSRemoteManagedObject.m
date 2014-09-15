@@ -5,6 +5,7 @@
 //  Created by Sam Soffes on 4/7/12.
 //  Copyright (c) 2012-2014 Sam Soffes. All rights reserved.
 //
+#import <ISO8601/ISO8601.h>
 
 #import "SSRemoteManagedObject.h"
 
@@ -179,6 +180,7 @@
 
 
 + (NSDate *)parseDate:(id)dateStringOrDateNumber {
+
 	// Return nil if nil is given
 	if (!dateStringOrDateNumber || dateStringOrDateNumber == [NSNull null]) {
 		return nil;
@@ -191,56 +193,9 @@
 
 	// Parse string
 	else if ([dateStringOrDateNumber isKindOfClass:[NSString class]]) {
-		// ISO8601 Parser borrowed from SSToolkit. http://sstoolk.it
-		NSString *iso8601 = dateStringOrDateNumber;
-		if (!iso8601) {
-			return nil;
-		}
-
-		const char *str = [iso8601 cStringUsingEncoding:NSUTF8StringEncoding];
-		char newStr[25];
-
-		struct tm tm;
-		size_t len = strlen(str);
-		if (len == 0) {
-			return nil;
-		}
-
-		// UTC
-		if (len == 20 && str[len - 1] == 'Z') {
-			strncpy(newStr, str, len - 1);
-			strncpy(newStr + len - 1, "+0000", 5);
-		}
-
-		//Milliseconds parsing
-		else if (len == 24 && str[len - 1] == 'Z') {
-			strncpy(newStr, str, len - 1);
-			strncpy(newStr, str, len - 5);
-			strncpy(newStr + len - 5, "+0000", 5);
-		}
-
-		// Timezone
-		else if (len == 25 && str[22] == ':') {
-			strncpy(newStr, str, 22);
-			strncpy(newStr + 22, str + 23, 2);
-		}
-
-		// Poorly formatted timezone
-		else {
-			strncpy(newStr, str, len > 24 ? 24 : len);
-		}
-
-		// Add null terminator
-		newStr[sizeof(newStr) - 1] = 0;
-
-		if (strptime(newStr, "%FT%T%z", &tm) == NULL) {
-			return nil;
-		}
-
-		time_t t;
-		t = mktime(&tm);
-
-		return [NSDate dateWithTimeIntervalSince1970:t];
+        NSDateComponents *dateComponents = [ISO8601Serialization dateComponentsForString:dateStringOrDateNumber];
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        return [calendar dateFromComponents:dateComponents];
 	}
 
 	NSAssert1(NO, @"[SSRemoteManagedObject] Failed to parse date: %@", dateStringOrDateNumber);

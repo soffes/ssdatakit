@@ -6,8 +6,10 @@ Pod::Spec.new do |spec|
   spec.license      = { :type => 'MIT', :file => 'LICENSE' }
   spec.author       = { 'Sam Soffes' => 'sam@soff.es' }
   spec.source       = { :git => 'https://github.com/soffes/ssdatakit.git', :tag => "v#{spec.version}" }
-  spec.framework  = 'CoreData'
+  spec.framework    = 'CoreData'
   spec.requires_arc = true
+
+  spec.dependency   'ISO8601', '~> 1.0'
 
   spec.ios.deployment_target = '6.0'
   spec.ios.source_files = 'SSDataKit/*.{h,m}'

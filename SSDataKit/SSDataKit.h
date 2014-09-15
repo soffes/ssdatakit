@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import <ISO8601/ISO8601.h>
 
 #import "SSManagedObject.h"
 #import "SSRemoteManagedObject.h"
