@@ -3,3 +3,4 @@
 *.perspectivev3
 *.xcworkspace
 xcuserdata
+.DS_Store
