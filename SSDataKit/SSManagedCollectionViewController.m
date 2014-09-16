@@ -127,7 +127,7 @@
 	if (self.ignoreChange || ![self useChangeAnimations]) {
 		return;
 	}
-	
+
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem:NSNotFound inSection:sectionIndex];
     indexPath = [self viewIndexPathForFetchedIndexPath:indexPath];
     sectionIndex = indexPath.section;
@@ -160,7 +160,7 @@
 	if (self.ignoreChange || ![self useChangeAnimations]) {
 		return;
 	}
-	
+
     indexPath = [self viewIndexPathForFetchedIndexPath:indexPath];
     newIndexPath = [self viewIndexPathForFetchedIndexPath:newIndexPath];
 
@@ -186,12 +186,12 @@
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
 	[super controllerDidChangeContent:controller];
-	
+
     if (![self useChangeAnimations]) {
         [self.collectionView reloadData];
         return;
     }
-    
+
     // Copy state so it can't be mutated out from under us
     NSArray *sectionChanges = [self.sectionChanges copy];
     NSArray *objectChanges = [self.objectChanges copy];
@@ -200,7 +200,7 @@
 
     // Perform updates
     [self.collectionView performBatchUpdates:^{
-        
+
         // Section changes
         for (NSDictionary *change in sectionChanges) {
             [change enumerateKeysAndObjectsUsingBlock:^(NSNumber *key, id obj, BOOL *stop) {
@@ -227,7 +227,7 @@
                 }
             }];
         }
-        
+
         // Object changes
         for (NSDictionary *change in objectChanges) {
             [change enumerateKeysAndObjectsUsingBlock:^(NSNumber *key, id obj, BOOL *stop) {
@@ -248,7 +248,7 @@
                 }
             }];
         }
-        
+
     } completion:nil];
 }
 

@@ -39,9 +39,9 @@
 
 /**
  Key in remote dictionary for the object's remoteID attribute.
- 
+
  The default is `id`.
- 
+
  @return The key of the remote ID attribute.
  */
 + (NSString *)remoteIDDictionaryKey;
@@ -54,7 +54,7 @@
 /**
  Find an existing object with a given remote ID. The class' entity is used in the find. Therefore, this should only be
  called on a subclass. The object will be created if it is not found. The `mainQueueContext` will be used.
- 
+
  @param remoteID The remote ID of the object.
  @return An existing object with the given remote ID or a new object with the remoteID set.
  */
@@ -73,7 +73,7 @@
 /**
  Find an existing object with a given remote ID. The class' entity is used in the find. Therefore, this should only be
  called on a subclass. `nil` is returned if the object is not found. The `mainQueueContext` will be used.
- 
+
  @param remoteID The remote ID of the object.
  @return An existing object with the given remote ID.
  */
@@ -95,7 +95,7 @@
 
  The dictionary will be unpacked if `shouldUnpackDictionary:` returns `YES`. The remote ID will be extracted from the
  dictionary using `remoteIDDictionaryKey`.
- 
+
  @param dictionary The dictionary to unpack.
  @return An existing object with the given dictionary or a new object with the dictionary unpacked.
  */
@@ -121,7 +121,7 @@
 
  The dictionary will be unpacked if `shouldUnpackDictionary:` returns `YES` and there is an object with the given ID.
  The remote ID will be extracted from the dictionary using `remoteIDDictionaryKey`.
- 
+
  @param dictionary The dictionary to unpack.
  @return An existing object with the given dictionary.
  */
@@ -172,7 +172,9 @@
 /**
  Parse a date in a dictionary from the server. A NSNumber containing the number of seconds since 1970 or a NSString
  containing an ISO8601 string are the only valid values for `dateStringOrDateNumber`.
+
+ DEPRECATED. Please use the `ISO8601` library instead: https://github.com/soffes/ISO8601
  */
-+ (NSDate *)parseDate:(id)dateStringOrDateNumber;
++ (NSDate *)parseDate:(id)dateStringOrDateNumber DEPRECATED_ATTRIBUTE;
 
 @end

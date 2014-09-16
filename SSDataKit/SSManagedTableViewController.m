@@ -141,7 +141,7 @@
 	if (self.ignoreChange || ![self useChangeAnimations]) {
 		return;
 	}
-	
+
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:NSNotFound inSection:sectionIndex];
     indexPath = [self viewIndexPathForFetchedIndexPath:indexPath];
     sectionIndex = indexPath.section;

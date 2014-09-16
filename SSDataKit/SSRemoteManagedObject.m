@@ -178,6 +178,8 @@
 }
 
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 + (NSDate *)parseDate:(id)dateStringOrDateNumber {
 	// Return nil if nil is given
 	if (!dateStringOrDateNumber || dateStringOrDateNumber == [NSNull null]) {
@@ -246,6 +248,7 @@
 	NSAssert1(NO, @"[SSRemoteManagedObject] Failed to parse date: %@", dateStringOrDateNumber);
 	return nil;
 }
+#pragma clang diagnostic pop
 
 
 + (NSArray *)defaultSortDescriptors {
