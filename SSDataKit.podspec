@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'SSDataKit'
-  spec.version      = '0.3.7'
+  spec.version      = '0.3.8'
   spec.summary      = 'Eliminate your Core Data boilerplate code.'
   spec.homepage     = 'https://github.com/soffes/ssdatakit'
   spec.license      = { :type => 'MIT', :file => 'LICENSE' }
@@ -13,5 +13,5 @@ Pod::Spec.new do |spec|
   spec.ios.source_files = 'SSDataKit/*.{h,m}'
 
   spec.osx.deployment_target = '10.8'
-  spec.osx.source_files = %w{SSDataKit/SSDataKit.h SSDataKit/NSManagedObjectContext+SSDataKitAdditions.* SSDataKit/SSManagedObject.* SSDataKit/SSRemoteManagedObject.*}
+  spec.osx.source_files = %w{SSDataKit/SSDataKit.h SSDataKit/NSManagedObjectContext+SSDataKitAdditions.{h,m} SSDataKit/SSManagedObject.{h,m} SSDataKit/SSRemoteManagedObject.{h,m} SSDataKit/NSEntityDescription+SSDataKitAdditions.{h,m} SSDataKit/NSPropertyDescription+SSDataKitAdditions.{h,m}}
 end
