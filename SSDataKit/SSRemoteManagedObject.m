@@ -147,6 +147,8 @@
 		self.remoteID = [dictionary objectForKey:[SSRemoteManagedObject remoteIDDictionaryKey]];
 	}
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 	if ([self respondsToSelector:@selector(setCreatedAt:)]) {
 		self.createdAt = [[self class] parseDate:dictionary[@"created_at"]];
 	}
@@ -154,6 +156,7 @@
 	if ([self respondsToSelector:@selector(setUpdatedAt:)]) {
 		self.updatedAt = [[self class] parseDate:dictionary[@"updated_at"]];
 	}
+#pragma clang diagnostic pop
 }
 
 
@@ -162,7 +165,10 @@
 		return YES;
 	}
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 	NSDate *newDate = [[self class] parseDate:dictionary[@"updated_at"]];
+#pragma clang diagnostic pop
 	if (newDate && [self.updatedAt compare:newDate] == NSOrderedAscending) {
 		return YES;
 	}
