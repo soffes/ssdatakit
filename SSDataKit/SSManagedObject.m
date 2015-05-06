@@ -52,8 +52,9 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 + (NSManagedObjectContext *)mainQueueContext {
 	if (!__mainQueueContext) {
-		__mainQueueContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
-		[__mainQueueContext setParentContext:[self privateQueueContext]];
+		NSManagedObjectContext *mxct = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+		[mxct setParentContext:[self privateQueueContext]];
+        __mainQueueContext = mxct;
 	}
 	return __mainQueueContext;
 }
