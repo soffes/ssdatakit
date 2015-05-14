@@ -21,6 +21,7 @@
 @property (nonatomic, readonly) NSString *cacheName;
 @property (nonatomic, weak) id<NSFetchedResultsControllerDelegate> delegate;
 @property (nonatomic, readonly) NSArray *fetchedObjects;
+@property (nonatomic, readonly) NSArray *unfilteredFetchedObjects;
 @property (nonatomic, readonly) NSArray *sections;
 
 // NSFetchedResultsController
