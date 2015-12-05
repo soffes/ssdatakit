@@ -82,32 +82,46 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 
 + (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
-	static NSPersistentStoreCoordinator *persistentStoreCoordinator = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		NSManagedObjectModel *model = [self managedObjectModel];
-		persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
-
-		NSURL *url = [self persistentStoreURL];
-		NSError *error = nil;
-		NSDictionary *storeOptions = [self persistentStoreOptions];
-		[persistentStoreCoordinator addPersistentStoreWithType:[self persistentStoreType] configuration:nil URL:url options:storeOptions error:&error];
-
-		if (error) {
-			// Reset the persistent store
-			BOOL missingError = error.code == NSMigrationMissingSourceModelError || error.code == NSMigrationMissingMappingModelError;
-			if (__automaticallyResetsPersistentStore && missingError) {
-				[SSManagedObject removeSQLiteFiles];
-				[persistentStoreCoordinator addPersistentStoreWithType:[self persistentStoreType] configuration:nil URL:url options:storeOptions error:&error];
-			} else {
-				NSLog(@"[SSDataKit] Failed to add persistent store: %@ %@", error, error.userInfo);
-			}
-		}
-	});
-
-	return persistentStoreCoordinator;
+    static NSPersistentStoreCoordinator *persistentStoreCoordinator = nil;
+    static dispatch_once_t onceToken;
+    static dispatch_semaphore_t createSemaphore;
+    dispatch_once(&onceToken, ^{
+        createSemaphore = dispatch_semaphore_create(0);
+    });
+    
+    dispatch_semaphore_signal(createSemaphore);
+    
+    if(!persistentStoreCoordinator) {
+        NSManagedObjectModel *model = [self managedObjectModel];
+        NSPersistentStoreCoordinator *tempPersistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
+        
+        NSURL *url = [self persistentStoreURL];
+        NSError *error = nil;
+        NSDictionary *storeOptions = [self persistentStoreOptions];
+        [tempPersistentStoreCoordinator addPersistentStoreWithType:[self persistentStoreType] configuration:nil URL:url options:storeOptions error:&error];
+        
+        if (error) {
+            // Reset the persistent store
+            BOOL missingError = error.code == NSMigrationMissingSourceModelError || error.code == NSMigrationMissingMappingModelError;
+            if (__automaticallyResetsPersistentStore && missingError) {
+                [SSManagedObject removeSQLiteFiles];
+                [tempPersistentStoreCoordinator addPersistentStoreWithType:[self persistentStoreType] configuration:nil URL:url options:storeOptions error:&error];
+                if(error) {
+                    NSLog(@"[SSDataKit] Failed to add persistent store: %@ %@", error, error.userInfo);
+                } else {
+                    persistentStoreCoordinator = tempPersistentStoreCoordinator;
+                }
+            } else {
+                NSLog(@"[SSDataKit] Failed to add persistent store: %@ %@", error, error.userInfo);
+            }
+        } else {
+            persistentStoreCoordinator = tempPersistentStoreCoordinator;
+        }
+    }
+    
+    dispatch_semaphore_wait(createSemaphore, DISPATCH_TIME_FOREVER);
+    return persistentStoreCoordinator;
 }
-
 
 + (NSDictionary *)persistentStoreOptions {
 	if (!__persistentStoreOptions) {
