@@ -213,7 +213,7 @@ NSString *kPersistentStoreLock = @"kSSPeristentStoreLock";
 
 	// Delete old persistent store
 	NSURL *url = [self persistentStoreURL];
-	NSPersistentStoreCoordinator *psc = [SSManagedObject persistentStoreCoordinator];
+	NSPersistentStoreCoordinator *psc = [self persistentStoreCoordinator];
 	if ([psc removePersistentStore:psc.persistentStores.lastObject error:nil]) {
 		[SSManagedObject removeSQLiteFiles];
 
