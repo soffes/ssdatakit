@@ -26,8 +26,15 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 + (NSManagedObjectContext *)privateQueueContext {
 	if (!__privateQueueContext) {
-		__privateQueueContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-		[__privateQueueContext setPersistentStoreCoordinator:[self persistentStoreCoordinator]];
+		NSManagedObjectContext *privateQueueContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+		NSPersistentStoreCoordinator *persistentStoreCoordinator = [self persistentStoreCoordinator];
+		if (!persistentStoreCoordinator) {
+			NSLog(@"Error setting persistent store coordinator!");
+			return nil;
+		}
+
+		[privateQueueContext setPersistentStoreCoordinator:[self persistentStoreCoordinator]];
+		__privateQueueContext = privateQueueContext;
         __contextSaveObserver = [[NSNotificationCenter defaultCenter]
          addObserverForName:NSManagedObjectContextDidSaveNotification
          object:nil
@@ -53,7 +60,13 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 + (NSManagedObjectContext *)mainQueueContext {
 	if (!__mainQueueContext) {
 		NSManagedObjectContext *mxct = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
-		[mxct setParentContext:[self privateQueueContext]];
+		NSManagedObjectContext *parentContext = [self privateQueueContext];
+		if(!parentContext) {
+			NSLog(@"Error generating main parent context!");
+			return nil;
+		}
+
+		[mxct setParentContext:parentContext];
         __mainQueueContext = mxct;
 	}
 	return __mainQueueContext;
@@ -84,7 +97,6 @@ NSString *kPersistentStoreLock = @"kSSPeristentStoreLock";
 
 + (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
     static NSPersistentStoreCoordinator *persistentStoreCoordinator = nil;
-    
     @synchronized (kPersistentStoreLock) {
         if(!persistentStoreCoordinator) {
             NSManagedObjectModel *model = [self managedObjectModel];
