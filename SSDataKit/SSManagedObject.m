@@ -26,8 +26,15 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 + (NSManagedObjectContext *)privateQueueContext {
 	if (!__privateQueueContext) {
-		__privateQueueContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-		[__privateQueueContext setPersistentStoreCoordinator:[self persistentStoreCoordinator]];
+		NSManagedObjectContext *privateQueueContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+		NSPersistentStoreCoordinator *persistentStoreCoordinator = [self persistentStoreCoordinator];
+		if (!persistentStoreCoordinator) {
+			NSLog(@"Error setting persistent store coordinator!");
+			return nil;
+		}
+
+		[privateQueueContext setPersistentStoreCoordinator:[self persistentStoreCoordinator]];
+		__privateQueueContext = privateQueueContext;
         __contextSaveObserver = [[NSNotificationCenter defaultCenter]
          addObserverForName:NSManagedObjectContextDidSaveNotification
          object:nil
@@ -53,7 +60,13 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 + (NSManagedObjectContext *)mainQueueContext {
 	if (!__mainQueueContext) {
 		NSManagedObjectContext *mxct = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
-		[mxct setParentContext:[self privateQueueContext]];
+		NSManagedObjectContext *parentContext = [self privateQueueContext];
+		if(!parentContext) {
+			NSLog(@"Error generating main parent context!");
+			return nil;
+		}
+
+		[mxct setParentContext:parentContext];
         __mainQueueContext = mxct;
 	}
 	return __mainQueueContext;
@@ -80,34 +93,42 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 }
 #pragma clang diagnostic pop
 
+NSString *kPersistentStoreLock = @"kSSPeristentStoreLock";
 
 + (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
-	static NSPersistentStoreCoordinator *persistentStoreCoordinator = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		NSManagedObjectModel *model = [self managedObjectModel];
-		persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
-
-		NSURL *url = [self persistentStoreURL];
-		NSError *error = nil;
-		NSDictionary *storeOptions = [self persistentStoreOptions];
-		[persistentStoreCoordinator addPersistentStoreWithType:[self persistentStoreType] configuration:nil URL:url options:storeOptions error:&error];
-
-		if (error) {
-			// Reset the persistent store
-			BOOL missingError = error.code == NSMigrationMissingSourceModelError || error.code == NSMigrationMissingMappingModelError;
-			if (__automaticallyResetsPersistentStore && missingError) {
-				[SSManagedObject removeSQLiteFiles];
-				[persistentStoreCoordinator addPersistentStoreWithType:[self persistentStoreType] configuration:nil URL:url options:storeOptions error:&error];
-			} else {
-				NSLog(@"[SSDataKit] Failed to add persistent store: %@ %@", error, error.userInfo);
-			}
-		}
-	});
-
-	return persistentStoreCoordinator;
+    static NSPersistentStoreCoordinator *persistentStoreCoordinator = nil;
+    @synchronized (kPersistentStoreLock) {
+        if(!persistentStoreCoordinator) {
+            NSManagedObjectModel *model = [self managedObjectModel];
+            NSPersistentStoreCoordinator *tempPersistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
+            
+            NSURL *url = [self persistentStoreURL];
+            NSError *error = nil;
+            NSDictionary *storeOptions = [self persistentStoreOptions];
+            [tempPersistentStoreCoordinator addPersistentStoreWithType:[self persistentStoreType] configuration:nil URL:url options:storeOptions error:&error];
+            
+            if (error) {
+                // Reset the persistent store
+                BOOL missingError = error.code == NSMigrationMissingSourceModelError || error.code == NSMigrationMissingMappingModelError;
+                if (__automaticallyResetsPersistentStore && missingError) {
+                    [SSManagedObject removeSQLiteFiles];
+                    [tempPersistentStoreCoordinator addPersistentStoreWithType:[self persistentStoreType] configuration:nil URL:url options:storeOptions error:&error];
+                    if(error) {
+                        NSLog(@"[SSDataKit] Failed to add persistent store: %@ %@", error, error.userInfo);
+                    } else {
+                        persistentStoreCoordinator = tempPersistentStoreCoordinator;
+                    }
+                } else {
+                    NSLog(@"[SSDataKit] Failed to add persistent store: %@ %@", error, error.userInfo);
+                }
+            } else {
+                persistentStoreCoordinator = tempPersistentStoreCoordinator;
+            }
+        }
+    }
+    
+    return persistentStoreCoordinator;
 }
-
 
 + (NSDictionary *)persistentStoreOptions {
 	if (!__persistentStoreOptions) {
@@ -204,7 +225,7 @@ static NSString *const kURIRepresentationKey = @"URIRepresentation";
 
 	// Delete old persistent store
 	NSURL *url = [self persistentStoreURL];
-	NSPersistentStoreCoordinator *psc = [SSManagedObject persistentStoreCoordinator];
+	NSPersistentStoreCoordinator *psc = [self persistentStoreCoordinator];
 	if ([psc removePersistentStore:psc.persistentStores.lastObject error:nil]) {
 		[SSManagedObject removeSQLiteFiles];
 
